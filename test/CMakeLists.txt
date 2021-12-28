@@ -1,7 +1,11 @@
 add_library(catch_main STATIC catch_main.cpp)
 target_link_libraries(catch_main PRIVATE CONAN_PKG::catch2)
 
-add_executable(tests test.cpp)
+file(GLOB_RECURSE TEST_FILES *.cpp)
+list(REMOVE_ITEM TEST_FILES ${CMAKE_CURRENT_SOURCE_DIR}/catch_main.cpp)
+
+add_executable(tests ${TEST_FILES})
 target_link_libraries(tests PRIVATE catch_main)
+target_include_directories(tests PUBLIC ${CMAKE_SOURCE_DIR})
 
 install(TARGETS tests DESTINATION bin)

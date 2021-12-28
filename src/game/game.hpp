@@ -1,27 +1,26 @@
-#include "../attack/troop.hpp"
-#include "../defense/defense.hpp"
+#include "../attacker/attacker.hpp"
+#include "../defender/defender.hpp"
 #include "../utils/position.hpp"
 
 #include <memory>
 #include <vector>
 
-enum class TroopType { X, Y };
-
 class Game {
 
 public:
-  template <typename T> using vec_of_ptr = std::vector<std::unique_ptr<T>>;
+  Game(std::vector<Attacker> attackers, std::vector<Defender> defenses);
 
-  Game(vec_of_ptr<Troop> troops, vec_of_ptr<Defense> defenses);
+  [[nodiscard]] const std::vector<Attacker> &get_attackers() const;
 
-  Game
-  simulate(const std::vector<std::pair<Position, TroopType>> &spawn_postions);
+  [[nodiscard]] const std::vector<Defender> &get_defenders() const;
 
-  const vec_of_ptr<Troop> &get_troops() const;
-
-  const vec_of_ptr<Defense> &get_defenses() const;
+  Game simulate(
+      const std::vector<std::pair<Position, AttackerType>> &spawn_postions);
 
 private:
-  vec_of_ptr<Troop> _troops;
-  vec_of_ptr<Defense> _defenses;
+  std::vector<Attacker> _attackers;
+  std::vector<Defender> _defenses;
+
+  [[nodiscard]] size_t get_defender_from_position(Position p) const;
+  [[nodiscard]] size_t get_attacker_from_position(Position p) const;
 };
