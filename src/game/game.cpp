@@ -3,14 +3,14 @@
 #include <algorithm>
 
 using namespace std;
-Game::Game(std::vector<Attacker> troops, std::vector<Defender> defenses)
-    : _attackers(std::move(troops)), _defenses(std::move(defenses)) {}
+Game::Game(std::vector<Attacker> attackers, std::vector<Defender> defenses)
+    : _attackers(std::move(attackers)), _defenses(std::move(defenses)) {}
 
 Game Game::simulate(
     const std::vector<std::pair<Position, AttackerType>> &spawn_postions) {
 
   const auto &prev_state_attackers = this->get_attackers();
-  const auto &prev_state_defenders = this->get_defenses();
+  const auto &prev_state_defenders = this->get_defenders();
 
   std::vector<Attacker> attackers(prev_state_attackers.begin(),
                                   prev_state_attackers.end());
@@ -68,16 +68,16 @@ const std::vector<Attacker> &Game::get_attackers() const {
   return this->_attackers;
 }
 
-const std::vector<Defender> &Game::get_defenses() const {
+const std::vector<Defender> &Game::get_defenders() const {
   return this->_defenses;
 }
 
 [[nodiscard]] size_t Game::get_defender_from_position(Position p) const {
   auto it =
-      ranges::find_if(this->get_defenses(), [&](const Defender &defender) {
+      ranges::find_if(this->get_defenders(), [&](const Defender &defender) {
         return defender.get_position() == p;
       });
-  return distance(this->get_defenses().begin(), it);
+  return distance(this->get_defenders().begin(), it);
 }
 
 [[nodiscard]] size_t Game::get_attacker_from_position(Position p) const {

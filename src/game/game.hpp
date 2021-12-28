@@ -8,11 +8,11 @@
 class Game {
 
 public:
-  Game(std::vector<Attacker> troops, std::vector<Defender> defenses);
+  Game(std::vector<Attacker> attackers, std::vector<Defender> defenses);
 
   [[nodiscard]] const std::vector<Attacker> &get_attackers() const;
 
-  [[nodiscard]] const std::vector<Defender> &get_defenses() const;
+  [[nodiscard]] const std::vector<Defender> &get_defenders() const;
 
   Game simulate(
       const std::vector<std::pair<Position, AttackerType>> &spawn_postions);
