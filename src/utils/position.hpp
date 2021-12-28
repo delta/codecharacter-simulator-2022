@@ -1,5 +1,7 @@
 #pragma once
 
+#include <compare>
+
 class Position {
 private:
   int _x;
@@ -10,8 +12,9 @@ public:
    *  handle out of map positions
    */
   Position(int x, int y);
-  int get_x() const;
-  int get_y() const;
-  float distance_to(Position other) const;
+  [[nodiscard]] int get_x() const;
+  [[nodiscard]] int get_y() const;
+  [[nodiscard]] double distance_to(Position other) const;
+  auto operator<=>(const Position &other) const = default;
   static bool is_valid(int x, int y);
 };

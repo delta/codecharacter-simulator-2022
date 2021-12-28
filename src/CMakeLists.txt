@@ -1,1 +1,7 @@
 add_executable(main main.cpp)
+add_library(cc_simulator)
+add_subdirectory(actor)
+add_subdirectory(attacker)
+add_subdirectory(defender)
+add_subdirectory(game)
+add_subdirectory(utils)
