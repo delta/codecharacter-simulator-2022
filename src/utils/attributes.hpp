@@ -8,6 +8,7 @@ struct Attributes {
   const unsigned _price;
   Attributes(unsigned hp, unsigned range, unsigned attack_power, unsigned speed,
              unsigned price);
+  [[nodiscard]] unsigned get_price() const;
 
   /**
    * A default constructor is to be added for this, solely for the reason of

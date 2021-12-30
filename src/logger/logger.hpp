@@ -3,6 +3,7 @@
 #include <sstream>
 #include <vector>
 
+#include "../attacker/attacker.hpp"
 #include "../defender/defender.hpp"
 
 /*
@@ -22,13 +23,14 @@ public:
 
   static std::ostringstream &get_stream() { return get()._stream; }
   static void log_init(std::vector<Defender> &defenders);
-  static void log_turn(int turn);
-  static void log_move(int attackerId, int x, int y);
-  static void log_shoot(int attackerId, size_t defenderId, unsigned targetHp);
-  static void log_spawn(size_t defenderId, DefenderType type, int x, int y);
-  static void log_dead(size_t defenderId);
-  static void log_destruction(int percent);
-  static void log_coins(int coins);
+  static void log_turn(unsigned turn);
+  static void log_move(size_t attackerId, int x, int y);
+  static void log_shoot(size_t attackerId, size_t defenderId,
+                        unsigned targetHp);
+  static void log_spawn(size_t attackerId, AttackerType type, int x, int y);
+  static void log_dead(char actorType, size_t actorId);
+  static void log_destruction(unsigned percent);
+  static void log_coins(unsigned coins);
   static void log_end();
   [[nodiscard]] static std::string get_log();
 

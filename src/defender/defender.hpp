@@ -20,12 +20,13 @@ public:
 
   enum class State { IDLE, ATTACKING, DEAD };
 
-  Defender(DefenderType type, Position position, unsigned hp, unsigned range,
-           unsigned attack_power, unsigned price, State state = State::IDLE)
-      : Actor{position, hp, range, attack_power, price}, _type(type),
+  Defender(size_t id, DefenderType type, Position position, unsigned hp,
+           unsigned range, unsigned attack_power, unsigned price,
+           State state = State::IDLE)
+      : Actor{id, position, hp, range, attack_power, price}, _type(type),
         _state(state) {}
 
-  static Defender construct(DefenderType type, Position p);
+  static Defender construct(size_t id, DefenderType type, Position p);
 
   [[nodiscard]] Position
   get_nearest_attacker_postion(const std::vector<Attacker> &attackers) const;

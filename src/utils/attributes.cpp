@@ -5,5 +5,7 @@ Attributes::Attributes(unsigned hp, unsigned range, unsigned attack_power,
     : _hp(hp), _range(range), _attack_power(attack_power), _speed(speed),
       _price(price) {}
 
+unsigned Attributes::get_price() const { return this->_price; }
+
 Attributes::Attributes()
     : _hp(0), _range(0), _attack_power(0), _speed(0), _price(0) {}

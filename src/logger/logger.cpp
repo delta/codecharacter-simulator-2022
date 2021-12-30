@@ -2,6 +2,7 @@
 #include <sstream>
 #include <vector>
 
+#include "../attacker/attacker.hpp"
 #include "../defender/defender.hpp"
 #include "logger.hpp"
 
@@ -22,40 +23,41 @@ void Logger::log_init(std::vector<Defender> &defenders) {
   Logger::get_stream() << "\n";
 }
 
-void Logger::log_turn(int turn) {
+void Logger::log_turn(unsigned turn) {
   Logger::get_stream() << "TURN"
                        << ", " << turn << "\n";
 }
 
-void Logger::log_move(int attackerId, int x, int y) {
+void Logger::log_move(size_t attackerId, int x, int y) {
   Logger::get_stream() << "MOVE"
                        << ", " << attackerId << ", " << x << ", " << y << "\n";
 }
 
-void Logger::log_shoot(int attackerId, size_t defenderId, unsigned targetHp) {
+void Logger::log_shoot(size_t attackerId, size_t defenderId,
+                       unsigned targetHp) {
   Logger::get_stream() << "SHOOT"
                        << ", " << attackerId << ", " << defenderId << ", "
                        << targetHp << "\n";
 }
 
-void Logger::log_spawn(size_t defenderId, DefenderType type, int x, int y) {
+void Logger::log_spawn(size_t attackerId, AttackerType type, int x, int y) {
   Logger::get_stream() << "SPAWN"
-                       << ", " << defenderId << ", " << (int)type << ", " << x
+                       << ", " << attackerId << ", " << (int)type << ", " << x
                        << ", " << y << "\n";
 }
 
-void Logger::log_dead(size_t defenderId) {
+void Logger::log_dead(char actorType, size_t actorId) {
   Logger::get_stream() << "DEAD"
-                       << ", " << defenderId << "\n";
+                       << ", " << actorType << ", " << actorId << "\n";
 }
 
-void Logger::log_destruction(int percent) {
+void Logger::log_destruction(unsigned percent) {
   Logger::get_stream() << "DESTRUCTION"
                        << ", " << percent << "%"
                        << "\n";
 }
 
-void Logger::log_coins(int coins) {
+void Logger::log_coins(unsigned coins) {
   Logger::get_stream() << "COINS"
                        << ", " << coins << "\n";
 }
