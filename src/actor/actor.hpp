@@ -12,6 +12,8 @@ public:
   Actor(Position position, unsigned hp, unsigned range, unsigned attack_power,
         unsigned price);
 
+  virtual ~Actor() = default;
+
   [[nodiscard]] bool is_in_range(const Actor &actor) const;
 
   void attack(Actor &opponent) const;

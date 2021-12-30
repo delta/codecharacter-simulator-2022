@@ -1,5 +1,8 @@
 #include <iostream>
 
+#include "defender/defender.hpp"
+#include "logger/logger.hpp"
+
 int main() {
   /*
    * 1) we'll need to get a few things as input for the first time
@@ -17,4 +20,14 @@ int main() {
    * 6) Go to 2) until end of game?
    */
   std::cout << "CODE CHARACTER 2022!!!!!!\n";
+  auto defenders = std::vector<Defender>();
+  Logger::log_init(defenders);
+  Logger::log_turn(1);
+  Logger::log_move(0, 0, 0);
+  Logger::log_shoot(0, 0, 0);
+  Logger::log_spawn(0, DefenderType::X, 0, 0);
+  Logger::log_dead(0);
+  Logger::log_destruction(0);
+  Logger::log_coins(0);
+  std::cout << Logger::get_log();
 }
