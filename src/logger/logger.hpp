@@ -1,13 +1,9 @@
 #pragma once
 
-#include <algorithm>
-#include <memory>
 #include <sstream>
 #include <vector>
 
 #include "../defender/defender.hpp"
-
-template <typename T> using vec_of_ptr = std::vector<std::unique_ptr<T>>;
 
 /*
  * A singleton class that handles logging
@@ -25,7 +21,7 @@ public:
   Logger &operator=(Logger &&) = delete;
 
   static std::ostringstream &get_stream() { return get()._stream; }
-  static void log_init(vec_of_ptr<Defender> &defenders);
+  static void log_init(std::vector<Defender> &defenders);
   static void log_turn(int turn);
   static void log_move(int attackerId, int x, int y);
   static void log_shoot(int attackerId, size_t defenderId, unsigned targetHp);

@@ -1,14 +1,11 @@
 #include <algorithm>
-#include <memory>
 #include <sstream>
 #include <vector>
 
 #include "../defender/defender.hpp"
 #include "logger.hpp"
 
-template <typename T> using vec_of_ptr = std::vector<std::unique_ptr<T>>;
-
-void Logger::log_init(vec_of_ptr<Defender> &defenders) {
+void Logger::log_init(std::vector<Defender> &defenders) {
   Logger::get_stream() << "INIT"
                        << "\n"
                        << "TOWERS"
@@ -17,10 +14,10 @@ void Logger::log_init(vec_of_ptr<Defender> &defenders) {
   std::ranges::for_each(defenders, [&](const auto &defender) {
     Logger::get_stream() << ", "
                          << "(" << defenderId++ << ", "
-                         << (int)defender->get_type() << ", "
-                         << defender->get_position().get_x() << ", "
-                         << defender->get_position().get_y() << ", "
-                         << defender->get_hp() << ")";
+                         << (int)defender.get_type() << ", "
+                         << defender.get_position().get_x() << ", "
+                         << defender.get_position().get_y() << ", "
+                         << defender.get_hp() << ")";
   });
   Logger::get_stream() << "\n";
 }

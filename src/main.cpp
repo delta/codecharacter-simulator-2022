@@ -3,8 +3,6 @@
 #include "defender/defender.hpp"
 #include "logger/logger.hpp"
 
-template <typename T> using vec_of_ptr = std::vector<std::unique_ptr<T>>;
-
 int main() {
   /*
    * 1) we'll need to get a few things as input for the first time
@@ -22,7 +20,7 @@ int main() {
    * 6) Go to 2) until end of game?
    */
   std::cout << "CODE CHARACTER 2022!!!!!!\n";
-  auto defenders = vec_of_ptr<Defender>();
+  auto defenders = std::vector<Defender>();
   Logger::log_init(defenders);
   Logger::log_turn(1);
   Logger::log_move(0, 0, 0);
