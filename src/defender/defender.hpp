@@ -13,13 +13,17 @@ enum class DefenderType { X, Y };
 class Attacker;
 
 class Defender : public Actor {
+
 public:
-  static std::unordered_map<DefenderType, Attributes> attribute_dictionary;
+  static inline std::unordered_map<DefenderType, Attributes>
+      attribute_dictionary;
 
   enum class State { IDLE, ATTACKING, DEAD };
 
-  Defender(Position position, unsigned hp, unsigned range,
-           unsigned attack_power, unsigned price, State status = State::IDLE);
+  Defender(DefenderType type, Position position, unsigned hp, unsigned range,
+           unsigned attack_power, unsigned price, State state = State::IDLE)
+      : Actor{position, hp, range, attack_power, price}, _type(type),
+        _state(state) {}
 
   static Defender construct(DefenderType type, Position p);
 
@@ -30,6 +34,9 @@ public:
 
   void set_state(State s);
 
+  [[nodiscard]] DefenderType get_type() const;
+
 private:
+  DefenderType _type;
   State _state;
 };
