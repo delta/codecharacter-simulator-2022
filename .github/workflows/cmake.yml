@@ -8,8 +8,8 @@ on:
 
 env:
   BUILD_TYPE: Release
-  CC: clang
-  CXX: clang++
+  CC: gcc-11
+  CXX: g++-11
 
 jobs:
   build-and-test:
@@ -17,7 +17,7 @@ jobs:
 
     steps:
     - name: Install ubuntu dependencies
-      run: sudo apt-get install ninja-build gcc-11 libstdc++-11-dev clang-12 clang-format
+      run: sudo apt-get install ninja-build gcc-11 libstdc++-11-dev clang-format
 
     - name: Checkout the repository
       uses: actions/checkout@v2
