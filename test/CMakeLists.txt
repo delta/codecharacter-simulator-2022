@@ -6,6 +6,7 @@ list(REMOVE_ITEM TEST_FILES ${CMAKE_CURRENT_SOURCE_DIR}/catch_main.cpp)
 
 add_executable(tests ${TEST_FILES})
 target_link_libraries(tests PRIVATE catch_main)
+target_link_libraries(tests PRIVATE cc_simulator)
 target_include_directories(tests PUBLIC ${CMAKE_SOURCE_DIR})
 
 install(TARGETS tests DESTINATION bin)

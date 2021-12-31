@@ -1,4 +1,5 @@
 #include <cmath>
+#include <iostream>
 
 #include "../logger/logger.hpp"
 
@@ -60,14 +61,23 @@ void Attacker::move(Position position) {
   auto distance = current_position.distance_to(position);
   double angle = atan((double)(position.get_y() - current_position.get_y()) /
                       (position.get_x() - current_position.get_x()));
+  std::cout << "angle: " << angle << std::endl;
+  std::cout << "distance: " << distance << std::endl;
   double step = this->_speed;
-  if (this->_speed > distance - this->_attack_power) {
-    step = this->_speed + this->_attack_power - distance;
+  if (distance < this->_range) {
+    // Already in range
+    return;
   }
-  double x_step = step * cos(angle);
-  double y_step = step * sin(angle);
-  this->_position = Position(current_position.get_x() + (int)x_step,
-                             current_position.get_y() + (int)y_step);
+  if (this->_speed > distance - this->_range) {
+    // Move only to boundary of range
+    step = distance - this->_range;
+  }
+  int x_step = round(step * cos(angle));
+  int y_step = round(step * sin(angle));
+  std::cout << "x_step: " << x_step << std::endl;
+  std::cout << "y_step: " << y_step << std::endl;
+  this->_position = Position(current_position.get_x() + x_step,
+                             current_position.get_y() + y_step);
 }
 
 void Attacker::set_state(State s) { this->_state = s; }
