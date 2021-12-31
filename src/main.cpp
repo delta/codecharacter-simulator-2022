@@ -1,8 +1,9 @@
 #include <algorithm>
 #include <iostream>
 #include <numeric>
+#ifndef __clang__ // Ranges is buggy in clang
 #include <ranges>
-
+#endif
 #include "attacker/attacker.hpp"
 #include "defender/defender.hpp"
 #include "game/game.hpp"
@@ -17,7 +18,12 @@ int main() {
 
   unsigned n_attacker_types;
   std::cin >> n_attacker_types;
-  for (int attacker_type_id : std::views::iota(0u, n_attacker_types)) {
+#ifdef __clang__ // https://gcc.gnu.org/bugzilla/show_bug.cgi?id=97120
+  for (unsigned attacker_type_id = 0; attacker_type_id < n_attacker_types;
+       ++attacker_type_id) {
+#else
+  for (unsigned attacker_type_id : std::views::iota(0u, n_attacker_types)) {
+#endif
     unsigned hp, range, attack_power, speed, price;
     std::cin >> hp >> range >> attack_power >> speed >> price;
     Attacker::attribute_dictionary.insert(
@@ -27,7 +33,12 @@ int main() {
 
   unsigned n_defender_types;
   std::cin >> n_defender_types;
-  for (int defender_type_id : std::views::iota(0u, n_defender_types)) {
+#ifdef __clang__
+  for (unsigned defender_type_id = 0; defender_type_id < n_defender_types;
+       ++defender_type_id) {
+#else
+  for (unsigned defender_type_id : std::views::iota(0u, n_defender_types)) {
+#endif
     unsigned hp, range, attack_power, speed, price;
     std::cin >> hp >> range >> attack_power >> speed >> price;
     Defender::attribute_dictionary.insert(
@@ -38,7 +49,11 @@ int main() {
   auto defenders = std::vector<Defender>();
   size_t n_defenders;
   std::cin >> n_defenders;
+#ifdef __clang__
+  for (size_t defender_id = 0; defender_id < n_defenders; ++defender_id) {
+#else
   for (size_t defender_id : std::views::iota(0u, n_defenders)) {
+#endif
     unsigned type_id, x, y;
     std::cin >> type_id >> x >> y;
     defenders.emplace_back(Defender::construct(
@@ -55,7 +70,11 @@ int main() {
   Game game({}, defenders, coins);
 
   size_t attacker_id = 0;
+#ifdef __clang__
+  for (size_t turn = 0; turn < turns; ++turn) {
+#else
   for (size_t turn : std::views::iota(0u, turns)) {
+#endif
     unsigned n_attackers;
     std::cin >> n_attackers;
     Logger::log_turn(turn);
