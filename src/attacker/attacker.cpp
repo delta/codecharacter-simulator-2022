@@ -57,13 +57,17 @@ void Attacker::update_state() {
 
 void Attacker::move(Position position) {
   auto current_position = this->_position;
+  auto distance = current_position.distance_to(position);
   double angle = atan((double)(position.get_y() - current_position.get_y()) /
                       (position.get_x() - current_position.get_x()));
-  double x_step = cos(angle) * this->_speed;
-  double y_step = sin(angle) * this->_speed;
-
-  this->_position = Position(current_position.get_x() + x_step,
-                             current_position.get_y() + y_step);
+  double step = this->_speed;
+  if (this->_speed > distance - this->_attack_power) {
+    step = this->_speed + this->_attack_power - distance;
+  }
+  double x_step = step * cos(angle);
+  double y_step = step * sin(angle);
+  this->_position = Position(current_position.get_x() + (int)x_step,
+                             current_position.get_y() + (int)y_step);
 }
 
 void Attacker::set_state(State s) { this->_state = s; }
