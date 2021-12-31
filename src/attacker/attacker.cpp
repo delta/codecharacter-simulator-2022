@@ -61,8 +61,6 @@ void Attacker::move(Position position) {
   auto distance = current_position.distance_to(position);
   double angle = atan((double)(position.get_y() - current_position.get_y()) /
                       (position.get_x() - current_position.get_x()));
-  std::cout << "angle: " << angle << std::endl;
-  std::cout << "distance: " << distance << std::endl;
   double step = this->_speed;
   if (distance < this->_range) {
     // Already in range
@@ -74,8 +72,6 @@ void Attacker::move(Position position) {
   }
   int x_step = round(step * cos(angle));
   int y_step = round(step * sin(angle));
-  std::cout << "x_step: " << x_step << std::endl;
-  std::cout << "y_step: " << y_step << std::endl;
   this->_position = Position(current_position.get_x() + x_step,
                              current_position.get_y() + y_step);
 }
