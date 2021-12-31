@@ -42,7 +42,7 @@ jobs:
       uses: actions/cache@v2
       with:
         path: /home/runner/.conan
-        key: conan-${{ hashFiles('conanfile.txt') }}
+        key: conan-cache-${{ hashFiles('conanfile.txt') }}
 
     - name: Install conan dependencies
       if: steps.cache-conan.outputs.cache-hit != 'true'
@@ -53,7 +53,7 @@ jobs:
       uses: actions/cache@v2
       with:
         path: ${{github.workspace}}/build
-        key: cmake-${{ hashFiles('CMakeLists.txt') }}
+        key: cmake-cache-${{ hashFiles('CMakeLists.txt') }}
 
     - name: Configure CMake
       if: steps.cache-cmake.outputs.cache-hit != 'true'
