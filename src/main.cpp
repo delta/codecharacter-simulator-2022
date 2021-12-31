@@ -1,6 +1,7 @@
 #include <algorithm>
 #include <iostream>
 #include <numeric>
+#include <ranges>
 
 #include "attacker/attacker.hpp"
 #include "defender/defender.hpp"
@@ -8,63 +9,65 @@
 #include "logger/logger.hpp"
 
 int main() {
-  size_t mapX, mapY;
-  std::cin >> mapX >> mapY;
+  size_t map_x, map_y;
+  std::cin >> map_x >> map_y;
 
   unsigned turns, coins;
   std::cin >> turns >> coins;
 
-  unsigned nAttackerTypes;
-  std::cin >> nAttackerTypes;
-  for (unsigned i = 0; i < nAttackerTypes; ++i) {
+  unsigned n_attacker_types;
+  std::cin >> n_attacker_types;
+  for (int attacker_type_id : std::views::iota(0u, n_attacker_types)) {
     unsigned hp, range, attack_power, speed, price;
     std::cin >> hp >> range >> attack_power >> speed >> price;
-    Attacker::attribute_dictionary.insert(std::make_pair(
-        AttackerType(i), Attributes(hp, range, attack_power, speed, price)));
+    Attacker::attribute_dictionary.insert(
+        std::make_pair(AttackerType(attacker_type_id),
+                       Attributes(hp, range, attack_power, speed, price)));
   }
 
-  unsigned nDefenderTypes;
-  std::cin >> nDefenderTypes;
-  for (unsigned i = 0; i < nDefenderTypes; ++i) {
+  unsigned n_defender_types;
+  std::cin >> n_defender_types;
+  for (int defender_type_id : std::views::iota(0u, n_defender_types)) {
     unsigned hp, range, attack_power, speed, price;
     std::cin >> hp >> range >> attack_power >> speed >> price;
-    Defender::attribute_dictionary.insert(std::make_pair(
-        DefenderType(i), Attributes(hp, range, attack_power, speed, price)));
+    Defender::attribute_dictionary.insert(
+        std::make_pair(DefenderType(defender_type_id),
+                       Attributes(hp, range, attack_power, speed, price)));
   }
 
   auto defenders = std::vector<Defender>();
-  unsigned nDefenders;
-  std::cin >> nDefenders;
-  for (unsigned i = 0; i < nDefenders; ++i) {
-    unsigned typeId, x, y;
-    std::cin >> typeId >> x >> y;
-    defenders.emplace_back(
-        Defender::construct(i, DefenderType(typeId), Position(x, y)));
+  size_t n_defenders;
+  std::cin >> n_defenders;
+  for (size_t defender_id : std::views::iota(0u, n_defenders)) {
+    unsigned type_id, x, y;
+    std::cin >> type_id >> x >> y;
+    defenders.emplace_back(Defender::construct(
+        defender_id, DefenderType(type_id), Position(x, y)));
   }
 
-  auto initialHp = std::accumulate(defenders.begin(), defenders.end(), 0,
-                                   [](unsigned acc, const Defender &defender) {
-                                     return acc + defender.get_hp();
-                                   });
+  auto initial_hp = std::accumulate(defenders.begin(), defenders.end(), 0,
+                                    [](unsigned acc, const Defender &defender) {
+                                      return acc + defender.get_hp();
+                                    });
 
   Logger::log_init(defenders);
 
   Game game({}, defenders, coins);
 
-  size_t attackerId = 0;
-  for (unsigned turn = 0; turn < turns; ++turn) {
-    unsigned nAttackers;
-    std::cin >> nAttackers;
+  size_t attacker_id = 0;
+  for (size_t turn : std::views::iota(0u, turns)) {
+    unsigned n_attackers;
+    std::cin >> n_attackers;
     Logger::log_turn(turn);
 
     auto spawn_positions =
         std::vector<std::tuple<size_t, Position, AttackerType>>();
-    for (unsigned i = 0; i < nAttackers; ++i) {
-      unsigned typeId, x, y;
-      std::cin >> typeId >> x >> y;
-      Logger::log_spawn(attackerId, AttackerType(typeId), x, y);
+    while (n_attackers-- > 0) {
+      unsigned type_id, x, y;
+      std::cin >> type_id >> x >> y;
+      Logger::log_spawn(attacker_id, AttackerType(type_id), x, y);
       spawn_positions.emplace_back(
-          std::make_tuple(attackerId, Position(x, y), AttackerType(typeId)));
+          std::make_tuple(attacker_id, Position(x, y), AttackerType(type_id)));
       game = game.simulate(spawn_positions);
 
       auto active_attackers = game.get_attackers();
@@ -87,15 +90,16 @@ int main() {
 
       std::cout << game.get_coins() << "\n";
 
-      auto currentHp =
+      auto current_hp =
           std::accumulate(active_defenders.begin(), active_defenders.end(), 0,
                           [](unsigned acc, const Defender &defender) {
                             return acc + defender.get_hp();
                           });
 
-      Logger::log_destruction(100 - (initialHp - currentHp) * 100 / initialHp);
+      Logger::log_destruction(100 -
+                              (initial_hp - current_hp) * 100 / initial_hp);
       Logger::log_coins(game.get_coins());
-      ++attackerId;
+      ++attacker_id;
     }
   }
   Logger::log_end();

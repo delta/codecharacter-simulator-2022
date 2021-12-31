@@ -11,10 +11,10 @@ void Logger::log_init(std::vector<Defender> &defenders) {
                        << "\n"
                        << "TOWERS"
                        << ", " << defenders.size();
-  size_t defenderId = 0;
+  size_t defender_id = 0;
   std::ranges::for_each(defenders, [&](const auto &defender) {
     Logger::get_stream() << ", "
-                         << "(" << defenderId++ << ", "
+                         << "(" << defender_id++ << ", "
                          << (int)defender.get_type() << ", "
                          << defender.get_position().get_x() << ", "
                          << defender.get_position().get_y() << ", "
@@ -28,27 +28,27 @@ void Logger::log_turn(unsigned turn) {
                        << ", " << turn << "\n";
 }
 
-void Logger::log_move(size_t attackerId, int x, int y) {
+void Logger::log_move(size_t attacker_id, int x, int y) {
   Logger::get_stream() << "MOVE"
-                       << ", " << attackerId << ", " << x << ", " << y << "\n";
+                       << ", " << attacker_id << ", " << x << ", " << y << "\n";
 }
 
-void Logger::log_shoot(size_t attackerId, size_t defenderId,
-                       unsigned targetHp) {
+void Logger::log_shoot(size_t attacker_id, size_t defender_id,
+                       unsigned target_hp) {
   Logger::get_stream() << "SHOOT"
-                       << ", " << attackerId << ", " << defenderId << ", "
-                       << targetHp << "\n";
+                       << ", " << attacker_id << ", " << defender_id << ", "
+                       << target_hp << "\n";
 }
 
-void Logger::log_spawn(size_t attackerId, AttackerType type, int x, int y) {
+void Logger::log_spawn(size_t attacker_id, AttackerType type, int x, int y) {
   Logger::get_stream() << "SPAWN"
-                       << ", " << attackerId << ", " << (int)type << ", " << x
+                       << ", " << attacker_id << ", " << (int)type << ", " << x
                        << ", " << y << "\n";
 }
 
-void Logger::log_dead(char actorType, size_t actorId) {
+void Logger::log_dead(char actor_type, size_t actor_id) {
   Logger::get_stream() << "DEAD"
-                       << ", " << actorType << ", " << actorId << "\n";
+                       << ", " << actor_type << ", " << actor_id << "\n";
 }
 
 void Logger::log_destruction(unsigned percent) {

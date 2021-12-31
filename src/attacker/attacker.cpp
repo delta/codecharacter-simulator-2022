@@ -1,3 +1,5 @@
+#include <cmath>
+
 #include "../logger/logger.hpp"
 
 #include "attacker.hpp"
@@ -53,7 +55,16 @@ void Attacker::update_state() {
   return nearest_defender.get_position();
 }
 
-void Attacker::move(Position position) { this->_position = position; }
+void Attacker::move(Position position) {
+  auto current_position = this->_position;
+  double angle = atan((double)(position.get_y() - current_position.get_y()) /
+                      (position.get_x() - current_position.get_x()));
+  double x_step = cos(angle) * this->_speed;
+  double y_step = sin(angle) * this->_speed;
+
+  this->_position = Position(current_position.get_x() + x_step,
+                             current_position.get_y() + y_step);
+}
 
 void Attacker::set_state(State s) { this->_state = s; }
 
