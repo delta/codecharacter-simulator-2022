@@ -25,8 +25,8 @@ int main() {
   Logger::log_turn(1);
   Logger::log_move(0, 0, 0);
   Logger::log_shoot(0, 0, 0);
-  Logger::log_spawn(0, DefenderType::X, 0, 0);
-  Logger::log_dead(0);
+  Logger::log_spawn(0, AttackerType::X, 0, 0);
+  Logger::log_dead('A', 0);
   Logger::log_destruction(0);
   Logger::log_coins(0);
   std::cout << Logger::get_log();

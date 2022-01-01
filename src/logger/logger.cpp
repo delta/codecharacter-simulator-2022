@@ -2,6 +2,7 @@
 #include <sstream>
 #include <vector>
 
+#include "../attacker/attacker.hpp"
 #include "../defender/defender.hpp"
 #include "logger.hpp"
 
@@ -10,10 +11,10 @@ void Logger::log_init(std::vector<Defender> &defenders) {
                        << "\n"
                        << "TOWERS"
                        << ", " << defenders.size();
-  size_t defenderId = 0;
+  size_t defender_id = 0;
   std::ranges::for_each(defenders, [&](const auto &defender) {
     Logger::get_stream() << ", "
-                         << "(" << defenderId++ << ", "
+                         << "(" << defender_id++ << ", "
                          << (int)defender.get_type() << ", "
                          << defender.get_position().get_x() << ", "
                          << defender.get_position().get_y() << ", "
@@ -22,40 +23,41 @@ void Logger::log_init(std::vector<Defender> &defenders) {
   Logger::get_stream() << "\n";
 }
 
-void Logger::log_turn(int turn) {
+void Logger::log_turn(unsigned turn) {
   Logger::get_stream() << "TURN"
                        << ", " << turn << "\n";
 }
 
-void Logger::log_move(int attackerId, int x, int y) {
+void Logger::log_move(size_t attacker_id, int x, int y) {
   Logger::get_stream() << "MOVE"
-                       << ", " << attackerId << ", " << x << ", " << y << "\n";
+                       << ", " << attacker_id << ", " << x << ", " << y << "\n";
 }
 
-void Logger::log_shoot(int attackerId, size_t defenderId, unsigned targetHp) {
+void Logger::log_shoot(size_t attacker_id, size_t defender_id,
+                       unsigned target_hp) {
   Logger::get_stream() << "SHOOT"
-                       << ", " << attackerId << ", " << defenderId << ", "
-                       << targetHp << "\n";
+                       << ", " << attacker_id << ", " << defender_id << ", "
+                       << target_hp << "\n";
 }
 
-void Logger::log_spawn(size_t defenderId, DefenderType type, int x, int y) {
+void Logger::log_spawn(size_t attacker_id, AttackerType type, int x, int y) {
   Logger::get_stream() << "SPAWN"
-                       << ", " << defenderId << ", " << (int)type << ", " << x
+                       << ", " << attacker_id << ", " << (int)type << ", " << x
                        << ", " << y << "\n";
 }
 
-void Logger::log_dead(size_t defenderId) {
+void Logger::log_dead(char actor_type, size_t actor_id) {
   Logger::get_stream() << "DEAD"
-                       << ", " << defenderId << "\n";
+                       << ", " << actor_type << ", " << actor_id << "\n";
 }
 
-void Logger::log_destruction(int percent) {
+void Logger::log_destruction(unsigned percent) {
   Logger::get_stream() << "DESTRUCTION"
                        << ", " << percent << "%"
                        << "\n";
 }
 
-void Logger::log_coins(int coins) {
+void Logger::log_coins(unsigned coins) {
   Logger::get_stream() << "COINS"
                        << ", " << coins << "\n";
 }
