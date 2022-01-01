@@ -14,8 +14,8 @@ public:
 
   [[nodiscard]] const std::vector<Defender> &get_defenders() const;
 
-  Game simulate(
-      const std::vector<std::pair<Position, AttackerType>> &spawn_postions);
+  Game simulate(const std::vector<std::tuple<size_t, Position, AttackerType>>
+                    &spawn_postions);
 
 private:
   std::vector<Attacker> _attackers;
