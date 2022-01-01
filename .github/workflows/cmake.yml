@@ -65,4 +65,4 @@ jobs:
 
     - name: Test
       working-directory: ${{github.workspace}}/build/bin
-      run: ./tests --success --use-color=yes
+      run: ./tests --success --use-colour=yes
