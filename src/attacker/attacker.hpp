@@ -22,8 +22,8 @@ public:
   Attacker(AttackerType type, Position position, unsigned hp, unsigned range,
            unsigned speed, unsigned attack_power, unsigned price,
            State state = State::SPAWNED)
-      : Actor{position, hp, range, attack_power, price}, _type(type),
-        _state(state), _speed(speed), _destination{0, 0} {}
+      : Actor{_id_counter++, position, hp, range, attack_power, price},
+        _type(type), _state(state), _speed(speed), _destination{0, 0} {}
 
   static Attacker construct(AttackerType type, Position p);
 
@@ -44,6 +44,7 @@ public:
 private:
   void set_state(State s);
 
+  static inline size_t _id_counter;
   AttackerType _type;
   State _state;
   unsigned _speed;

@@ -22,8 +22,8 @@ public:
 
   Defender(DefenderType type, Position position, unsigned hp, unsigned range,
            unsigned attack_power, unsigned price, State state = State::IDLE)
-      : Actor{position, hp, range, attack_power, price}, _type(type),
-        _state(state) {}
+      : Actor{_id_counter++, position, hp, range, attack_power, price},
+        _type(type), _state(state) {}
 
   static Defender construct(DefenderType type, Position p);
 
@@ -37,6 +37,7 @@ public:
   [[nodiscard]] DefenderType get_type() const;
 
 private:
+  static inline size_t _id_counter;
   DefenderType _type;
   State _state;
 };
