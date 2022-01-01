@@ -1,6 +1,8 @@
-#include "../attacker/attacker.hpp"
-#include "../defender/defender.hpp"
-#include "../utils/position.hpp"
+#pragma once
+
+#include "attacker/attacker.hpp"
+#include "defender/defender.hpp"
+#include "utils/position.hpp"
 
 #include <memory>
 #include <vector>

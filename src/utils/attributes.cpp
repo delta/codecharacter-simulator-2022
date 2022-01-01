@@ -1,4 +1,4 @@
-#include "attributes.hpp"
+#include "utils/attributes.hpp"
 
 Attributes::Attributes(unsigned hp, unsigned range, unsigned attack_power,
                        unsigned speed, unsigned price)

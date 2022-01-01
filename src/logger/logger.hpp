@@ -3,8 +3,8 @@
 #include <sstream>
 #include <vector>
 
-#include "../attacker/attacker.hpp"
-#include "../defender/defender.hpp"
+#include "attacker/attacker.hpp"
+#include "defender/defender.hpp"
 
 /*
  * A singleton class that handles logging

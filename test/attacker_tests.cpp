@@ -1,4 +1,4 @@
-#include "../src/attacker/attacker.hpp"
+#include "attacker/attacker.hpp"
 #include <catch2/catch.hpp>
 
 SCENARIO("Attacker::move") {

@@ -1,4 +1,4 @@
-#include "defender.hpp"
+#include "defender/defender.hpp"
 
 Defender Defender::construct(DefenderType type, Position p) {
   Attributes attr = Defender::attribute_dictionary[type];

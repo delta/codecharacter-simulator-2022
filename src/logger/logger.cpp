@@ -2,9 +2,9 @@
 #include <sstream>
 #include <vector>
 
-#include "../attacker/attacker.hpp"
-#include "../defender/defender.hpp"
-#include "logger.hpp"
+#include "attacker/attacker.hpp"
+#include "defender/defender.hpp"
+#include "logger/logger.hpp"
 
 void Logger::log_init(std::vector<Defender> &defenders) {
   Logger::get_stream() << "INIT"

@@ -1,4 +1,4 @@
-#include "actor.hpp"
+#include "actor/actor.hpp"
 
 Actor::Actor(size_t id, Position position, unsigned hp, unsigned range,
              unsigned attack_power, unsigned price)
