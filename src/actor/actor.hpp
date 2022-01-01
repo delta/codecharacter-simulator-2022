@@ -32,7 +32,7 @@ public:
 
   virtual void update_state() = 0;
 
-private:
+protected:
   size_t _id;
   Position _position;
   unsigned _hp;
