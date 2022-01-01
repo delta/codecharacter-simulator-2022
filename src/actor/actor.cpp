@@ -1,9 +1,9 @@
-#include "./actor.hpp"
+#include "actor.hpp"
 
-Actor::Actor(Position position, unsigned hp, unsigned range,
+Actor::Actor(size_t id, Position position, unsigned hp, unsigned range,
              unsigned attack_power, unsigned price)
-    : _position(position), _hp(hp), _range(range), _attack_power(attack_power),
-      _price(price) {}
+    : _id(id), _position(position), _hp(hp), _range(range),
+      _attack_power(attack_power), _price(price) {}
 
 void Actor::attack(Actor &opponent) const {
   opponent.take_damage(this->get_attack_power());

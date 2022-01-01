@@ -19,13 +19,13 @@ public:
       attribute_dictionary;
 
   enum class State { SPAWNED, ATTACKING, MOVING, DEAD };
-  Attacker(AttackerType type, Position position, unsigned hp, unsigned range,
-           unsigned speed, unsigned attack_power, unsigned price,
-           State state = State::SPAWNED)
-      : Actor{position, hp, range, attack_power, price}, _type(type),
+  Attacker(size_t id, AttackerType type, Position position, unsigned hp,
+           unsigned range, unsigned speed, unsigned attack_power,
+           unsigned price, State state = State::SPAWNED)
+      : Actor{id, position, hp, range, attack_power, price}, _type(type),
         _state(state), _speed(speed), _destination{0, 0} {}
 
-  static Attacker construct(AttackerType type, Position p);
+  static Attacker construct(size_t id, AttackerType type, Position p);
 
   [[nodiscard]] Position
   get_nearest_defense_postion(const std::vector<Defender> &defenses) const;

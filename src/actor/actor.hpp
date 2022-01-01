@@ -9,8 +9,8 @@ class Attacker;
 
 class Actor {
 public:
-  Actor(Position position, unsigned hp, unsigned range, unsigned attack_power,
-        unsigned price);
+  Actor(size_t id, Position position, unsigned hp, unsigned range,
+        unsigned attack_power, unsigned price);
 
   virtual ~Actor() = default;
 
@@ -33,6 +33,7 @@ public:
   virtual void update_state() = 0;
 
 private:
+  size_t _id;
   Position _position;
   unsigned _hp;
   const unsigned _range;

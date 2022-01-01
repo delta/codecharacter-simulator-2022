@@ -1,8 +1,8 @@
 #include "defender.hpp"
 
-Defender Defender::construct(DefenderType type, Position p) {
+Defender Defender::construct(size_t id, DefenderType type, Position p) {
   Attributes attr = Defender::attribute_dictionary[type];
-  return {type, p, attr._hp, attr._range, attr._attack_power, attr._price};
+  return {id, type, p, attr._hp, attr._range, attr._attack_power, attr._price};
 }
 
 void Defender::update_state() {
