@@ -1,4 +1,6 @@
 add_library(cc_simulator)
+target_include_directories(cc_simulator PUBLIC ${CMAKE_SOURCE_DIR}/src)
+
 add_subdirectory(utils)
 add_subdirectory(actor)
 add_subdirectory(attacker)

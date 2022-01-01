@@ -1,8 +1,7 @@
 #include <cmath>
 
-#include "../logger/logger.hpp"
-
-#include "attacker.hpp"
+#include "attacker/attacker.hpp"
+#include "logger/logger.hpp"
 
 Attacker Attacker::construct(AttackerType type, Position p) {
   Attributes attr = Attacker::attribute_dictionary[type];

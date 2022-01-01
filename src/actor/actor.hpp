@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../utils/position.hpp"
+#include "utils/position.hpp"
 
 #include <memory>
 #include <vector>

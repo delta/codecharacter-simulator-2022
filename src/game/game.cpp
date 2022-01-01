@@ -1,4 +1,4 @@
-#include "game.hpp"
+#include "game/game.hpp"
 
 #include <algorithm>
 

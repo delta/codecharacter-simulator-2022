@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../actor/actor.hpp"
-#include "../utils/attributes.hpp"
-#include "../utils/position.hpp"
+#include "actor/actor.hpp"
+#include "utils/attributes.hpp"
+#include "utils/position.hpp"
 
 #include <memory>
 #include <unordered_map>
