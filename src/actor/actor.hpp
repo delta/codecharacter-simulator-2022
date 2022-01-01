@@ -5,8 +5,6 @@
 #include <memory>
 #include <vector>
 
-class Attacker;
-
 class Actor {
 public:
   Actor(size_t id, Position position, unsigned hp, unsigned range,
