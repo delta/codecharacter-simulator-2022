@@ -7,8 +7,7 @@ Game::Game(std::vector<Attacker> attackers, std::vector<Defender> defenses)
     : _attackers(std::move(attackers)), _defenses(std::move(defenses)) {}
 
 Game Game::simulate(
-    const std::vector<std::tuple<size_t, Position, AttackerType>>
-        &spawn_positions) {
+    const std::vector<std::pair<Position, AttackerType>> &spawn_positions) {
 
   const auto &prev_state_attackers = this->get_attackers();
   const auto &prev_state_defenders = this->get_defenders();
@@ -57,9 +56,8 @@ Game Game::simulate(
 
   // new attackers are spawned here
   ranges::for_each(spawn_positions, [&](const auto &spawn_details) {
-    const auto &[attacker_id, position, attacker_type] = spawn_details;
-    attackers.push_back(
-        Attacker::construct(attacker_id, attacker_type, position));
+    const auto &[position, attacker_type] = spawn_details;
+    attackers.push_back(Attacker::construct(attacker_type, position));
   });
 
   return {move(attackers), move(defenders)};

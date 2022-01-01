@@ -1,16 +1,11 @@
 #include "attacker.hpp"
 
-Attacker Attacker::construct(size_t id, AttackerType type, Position p) {
+Attacker Attacker::construct(AttackerType type, Position p) {
   Attributes attr = Attacker::attribute_dictionary[type];
-  return {id,
-          type,
-          p,
-          attr._hp,
-          attr._range,
-          attr._speed,
-          attr._attack_power,
-          attr._price,
-          Attacker::State::SPAWNED};
+  return {type,        p,
+          attr._hp,    attr._range,
+          attr._speed, attr._attack_power,
+          attr._price, Attacker::State::SPAWNED};
 }
 
 bool Attacker::is_destination_set() const { return this->_is_dest_set; }
