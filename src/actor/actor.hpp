@@ -18,6 +18,8 @@ public:
 
   void take_damage(unsigned damage);
 
+  [[nodiscard]] size_t get_id() const;
+
   [[nodiscard]] unsigned get_hp() const;
 
   [[nodiscard]] unsigned get_attack_power() const;

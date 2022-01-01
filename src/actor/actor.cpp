@@ -13,6 +13,8 @@ void Actor::take_damage(unsigned damage) {
   this->_hp -= std::min(damage, this->_hp);
 }
 
+size_t Actor::get_id() const { return this->_id; }
+
 unsigned Actor::get_hp() const { return this->_hp; }
 
 unsigned Actor::get_attack_power() const { return this->_attack_power; }
