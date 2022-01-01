@@ -1,3 +1,7 @@
+#include <cmath>
+
+#include "../logger/logger.hpp"
+
 #include "attacker.hpp"
 
 Attacker Attacker::construct(AttackerType type, Position p) {
@@ -32,4 +36,26 @@ void Attacker::update_state() {
   }
 }
 
+void Attacker::move(Position position) {
+  auto current_position = this->_position;
+  auto distance = current_position.distance_to(position);
+  double angle = atan((double)(position.get_y() - current_position.get_y()) /
+                      (position.get_x() - current_position.get_x()));
+  double step = this->_speed;
+  if (distance < this->_range) {
+    // Already in range
+    return;
+  }
+  if (this->_speed > distance - this->_range) {
+    // Move only to boundary of range
+    step = distance - this->_range;
+  }
+  int x_step = round(step * cos(angle));
+  int y_step = round(step * sin(angle));
+  this->_position = Position(current_position.get_x() + x_step,
+                             current_position.get_y() + y_step);
+}
+
 void Attacker::set_state(State s) { this->_state = s; }
+
+AttackerType Attacker::get_type() const { return this->_type; }

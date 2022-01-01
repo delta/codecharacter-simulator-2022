@@ -41,6 +41,8 @@ public:
 
   void update_state() final;
 
+  [[nodiscard]] AttackerType get_type() const;
+
 private:
   void set_state(State s);
 
