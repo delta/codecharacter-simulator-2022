@@ -1,11 +1,11 @@
 #pragma once
 
 struct Attributes {
-  const unsigned _hp;
-  const unsigned _range;
-  const unsigned _attack_power;
-  const unsigned _speed;
-  const unsigned _price;
+  const unsigned hp;
+  const unsigned range;
+  const unsigned attack_power;
+  const unsigned speed;
+  const unsigned price;
   Attributes(unsigned hp, unsigned range, unsigned attack_power, unsigned speed,
              unsigned price);
 
