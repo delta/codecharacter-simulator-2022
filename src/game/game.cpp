@@ -3,8 +3,10 @@
 #include <algorithm>
 
 using namespace std;
-Game::Game(std::vector<Attacker> attackers, std::vector<Defender> defenses)
-    : _attackers(std::move(attackers)), _defenses(std::move(defenses)) {}
+Game::Game(std::vector<Attacker> attackers, std::vector<Defender> defenses,
+           unsigned coins)
+    : _attackers(std::move(attackers)), _defenses(std::move(defenses)),
+      _coins(coins) {}
 
 Game Game::simulate(
     const std::vector<std::pair<Position, AttackerType>> &spawn_positions) {
@@ -60,10 +62,15 @@ Game Game::simulate(
   // new attackers are spawned here
   ranges::for_each(spawn_positions, [&](const auto &spawn_details) {
     const auto &[position, attacker_type] = spawn_details;
+    const unsigned price = Attacker::attribute_dictionary[attacker_type].price;
+    if (price > this->get_coins()) {
+      return;
+    }
+    this->_coins = this->get_coins() - price;
     attackers.push_back(Attacker::construct(attacker_type, position));
   });
 
-  return {move(attackers), move(defenders)};
+  return {move(attackers), move(defenders), this->_coins};
 }
 
 const std::vector<Attacker> &Game::get_attackers() const {
