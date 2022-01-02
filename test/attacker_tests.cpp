@@ -1,4 +1,6 @@
 #include "attacker/attacker.hpp"
+#include "defender/defender.hpp"
+
 #include <catch2/catch.hpp>
 
 SCENARIO("Attacker::move") {
@@ -132,6 +134,41 @@ SCENARIO("Attacker::move") {
       auto final_position = attacker.get_position();
       THEN("attacker does not move") {
         REQUIRE(final_position.get_x() == initial_position.get_x());
+      }
+    }
+  }
+}
+
+SCENARIO("Attacker::get_nearest_defender_id") {
+  GIVEN("a list of defenders of varying length") {
+    Attacker::attribute_dictionary.clear();
+    Attacker::attribute_dictionary.insert(
+        std::make_pair(AttackerType::X, Attributes(0, 0, 0, 0, 0)));
+    Attacker attacker = Attacker::construct(AttackerType::X, {0, 0});
+
+    WHEN("the given list is empty") {
+      std::vector<Defender> defenders;
+
+      auto nearest_defender_id = attacker.get_nearest_defender_id(defenders);
+
+      THEN("nearest defender does not exist") {
+        REQUIRE(nearest_defender_id.has_value() == false);
+      }
+    }
+
+    WHEN("list has defenders") {
+      std::vector<Defender> defenders{
+          Defender::construct(DefenderType::X, {5, 0}),
+          Defender::construct(DefenderType::X, {3, 0}),
+          Defender::construct(DefenderType::X, {1, 0}),
+          Defender::construct(DefenderType::X, {7, 0}),
+      };
+
+      auto nearest_defender_id = attacker.get_nearest_defender_id(defenders);
+
+      THEN("nearest defender is the closest defender") {
+        REQUIRE(nearest_defender_id.has_value() == true);
+        REQUIRE(nearest_defender_id.value() == defenders[2].get_id());
       }
     }
   }
