@@ -22,7 +22,4 @@ public:
 private:
   std::vector<Attacker> _attackers;
   std::vector<Defender> _defenses;
-
-  [[nodiscard]] size_t get_defender_from_position(Position p) const;
-  [[nodiscard]] size_t get_attacker_from_position(Position p) const;
 };
