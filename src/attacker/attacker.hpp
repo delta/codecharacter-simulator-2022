@@ -5,6 +5,7 @@
 #include "utils/position.hpp"
 
 #include <memory>
+#include <optional>
 #include <unordered_map>
 #include <vector>
 
@@ -27,8 +28,8 @@ public:
 
   static Attacker construct(AttackerType type, Position p);
 
-  [[nodiscard]] Position
-  get_nearest_defense_postion(const std::vector<Defender> &defenses) const;
+  [[nodiscard]] std::optional<size_t>
+  get_nearest_defender_index(const std::vector<Defender> &defenders) const;
 
   void move(Position position);
 

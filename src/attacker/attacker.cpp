@@ -1,4 +1,5 @@
 #include <cmath>
+#include <optional>
 
 #include "attacker/attacker.hpp"
 #include "logger/logger.hpp"
@@ -33,6 +34,20 @@ void Attacker::update_state() {
   if (this->get_hp() == 0) {
     this->set_state(State::DEAD);
   }
+}
+
+[[nodiscard]] std::optional<size_t> Attacker::get_nearest_defender_index(
+    const std::vector<Defender> &defenders) const {
+  if (defenders.empty()) {
+    return std::nullopt;
+  }
+  auto nearest_defender = std::min_element(
+      defenders.begin(), defenders.end(),
+      [this](const Defender &a, const Defender &b) {
+        return this->get_position().distance_to(a.get_position()) <
+               this->get_position().distance_to(b.get_position());
+      });
+  return std::distance(defenders.begin(), nearest_defender);
 }
 
 void Attacker::move(Position position) {
