@@ -36,18 +36,18 @@ void Attacker::update_state() {
   }
 }
 
-[[nodiscard]] std::optional<size_t> Attacker::get_nearest_defender_id(
+[[nodiscard]] std::optional<size_t> Attacker::get_nearest_defender_index(
     const std::vector<Defender> &defenders) const {
   if (defenders.empty()) {
     return std::nullopt;
   }
-  const Defender &nearest_defender = *std::min_element(
+  auto nearest_defender = std::min_element(
       defenders.begin(), defenders.end(),
       [this](const Defender &a, const Defender &b) {
         return this->get_position().distance_to(a.get_position()) <
                this->get_position().distance_to(b.get_position());
       });
-  return nearest_defender.get_id();
+  return std::distance(defenders.begin(), nearest_defender);
 }
 
 void Attacker::move(Position position) {

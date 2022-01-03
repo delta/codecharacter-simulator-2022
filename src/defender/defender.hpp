@@ -29,7 +29,7 @@ public:
   static Defender construct(DefenderType type, Position p);
 
   [[nodiscard]] std::optional<size_t>
-  get_nearest_attacker_id(const std::vector<Attacker> &attackers) const;
+  get_nearest_attacker_index(const std::vector<Attacker> &attackers) const;
 
   void update_state() final;
 

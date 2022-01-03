@@ -139,7 +139,7 @@ SCENARIO("Attacker::move") {
   }
 }
 
-SCENARIO("Attacker::get_nearest_defender_id") {
+SCENARIO("Attacker::get_nearest_defender_index") {
   GIVEN("a list of defenders of varying length") {
     Attacker::attribute_dictionary.clear();
     Attacker::attribute_dictionary.insert(
@@ -149,10 +149,11 @@ SCENARIO("Attacker::get_nearest_defender_id") {
     WHEN("the given list is empty") {
       std::vector<Defender> defenders;
 
-      auto nearest_defender_id = attacker.get_nearest_defender_id(defenders);
+      auto nearest_defender_index =
+          attacker.get_nearest_defender_index(defenders);
 
       THEN("nearest defender does not exist") {
-        REQUIRE(nearest_defender_id.has_value() == false);
+        REQUIRE(nearest_defender_index.has_value() == false);
       }
     }
 
@@ -164,11 +165,12 @@ SCENARIO("Attacker::get_nearest_defender_id") {
           Defender::construct(DefenderType::X, {7, 0}),
       };
 
-      auto nearest_defender_id = attacker.get_nearest_defender_id(defenders);
+      auto nearest_defender_index =
+          attacker.get_nearest_defender_index(defenders);
 
       THEN("nearest defender is the closest defender") {
-        REQUIRE(nearest_defender_id.has_value() == true);
-        REQUIRE(nearest_defender_id.value() == defenders[2].get_id());
+        REQUIRE(nearest_defender_index.has_value() == true);
+        REQUIRE(nearest_defender_index.value() == 2);
       }
     }
   }

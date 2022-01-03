@@ -14,18 +14,18 @@ void Defender::update_state() {
   }
 }
 
-[[nodiscard]] std::optional<size_t> Defender::get_nearest_attacker_id(
+[[nodiscard]] std::optional<size_t> Defender::get_nearest_attacker_index(
     const std::vector<Attacker> &attackers) const {
   if (attackers.empty()) {
     return std::nullopt;
   }
-  const Attacker &nearest_attacker = *std::min_element(
+  auto nearest_attacker = std::min_element(
       attackers.begin(), attackers.end(),
       [this](const Attacker &a, const Attacker &b) {
         return this->get_position().distance_to(a.get_position()) <
                this->get_position().distance_to(b.get_position());
       });
-  return nearest_attacker.get_id();
+  return std::distance(attackers.begin(), nearest_attacker);
 }
 
 void Defender::set_state(State s) { this->_state = s; }

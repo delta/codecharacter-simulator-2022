@@ -23,7 +23,7 @@ Game Game::simulate(
   ranges::for_each(
       prev_state_attackers, [&, index = 0](const Attacker &attacker) mutable {
         if (auto defender_index =
-                attacker.get_nearest_defender_id(prev_state_defenders)) {
+                attacker.get_nearest_defender_index(prev_state_defenders)) {
           if (attacker.is_in_range(defenders[*defender_index])) {
             attacker.attack(defenders[*defender_index]);
           } else {
@@ -38,7 +38,7 @@ Game Game::simulate(
   ranges::for_each(
       prev_state_defenders, [&, index = 0](const Defender &defender) mutable {
         if (auto attacker_index =
-                defender.get_nearest_attacker_id(prev_state_attackers)) {
+                defender.get_nearest_attacker_index(prev_state_attackers)) {
           if (defender.is_in_range(attackers[*attacker_index])) {
             defender.attack(attackers[*attacker_index]);
             // set defender's state to ATTACKING

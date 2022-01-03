@@ -3,7 +3,7 @@
 
 #include <catch2/catch.hpp>
 
-SCENARIO("Defender::get_nearest_attacker_id") {
+SCENARIO("Defender::get_nearest_attacker_index") {
   GIVEN("a list of attackers of varying length") {
     Defender::attribute_dictionary.clear();
     Defender::attribute_dictionary.insert(
@@ -13,10 +13,11 @@ SCENARIO("Defender::get_nearest_attacker_id") {
     WHEN("the given list is empty") {
       std::vector<Attacker> attackers;
 
-      auto nearest_attacker_id = defender.get_nearest_attacker_id(attackers);
+      auto nearest_attacker_index =
+          defender.get_nearest_attacker_index(attackers);
 
       THEN("nearest attacker does not exist") {
-        REQUIRE(nearest_attacker_id.has_value() == false);
+        REQUIRE(nearest_attacker_index.has_value() == false);
       }
     }
 
@@ -28,11 +29,12 @@ SCENARIO("Defender::get_nearest_attacker_id") {
           Attacker::construct(AttackerType::X, {7, 0}),
       };
 
-      auto nearest_attacker_id = defender.get_nearest_attacker_id(attackers);
+      auto nearest_attacker_index =
+          defender.get_nearest_attacker_index(attackers);
 
       THEN("nearest attacker is the closest attacker") {
-        REQUIRE(nearest_attacker_id.has_value() == true);
-        REQUIRE(nearest_attacker_id.value() == attackers[2].get_id());
+        REQUIRE(nearest_attacker_index.has_value() == true);
+        REQUIRE(nearest_attacker_index.value() == 2);
       }
     }
   }
