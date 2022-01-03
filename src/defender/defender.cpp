@@ -5,7 +5,7 @@
 
 Defender Defender::construct(DefenderType type, Position p) {
   Attributes attr = Defender::attribute_dictionary[type];
-  return {type, p, attr._hp, attr._range, attr._attack_power, attr._price};
+  return {type, p, attr.hp, attr.range, attr.attack_power, attr.price};
 }
 
 void Defender::update_state() {
