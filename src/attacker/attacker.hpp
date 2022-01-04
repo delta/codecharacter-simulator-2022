@@ -27,7 +27,7 @@ public:
       : Actor{_id_counter++, position, hp, range, attack_power, price},
         _type(type), _state(state), _speed(speed), _destination{0, 0} {}
 
-  static Attacker construct(AttackerType type, Position p);
+  [[nodiscard]] static Attacker construct(AttackerType type, Position p);
 
   [[nodiscard]] std::optional<size_t>
   get_nearest_defender_index(const std::vector<Defender> &defenders) const;
@@ -40,7 +40,7 @@ public:
 
   void set_destination(Position p);
 
-  Position get_destination();
+  [[nodiscard]] Position get_destination() const;
 
   void update_state() final;
 

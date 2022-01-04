@@ -21,7 +21,7 @@ void Attacker::set_destination(Position p) {
   this->_destination = p;
 }
 
-Position Attacker::get_destination() { return this->_destination; }
+Position Attacker::get_destination() const { return this->_destination; }
 
 void Attacker::update_state() {
   if (this->is_destination_set()) {

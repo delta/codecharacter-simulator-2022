@@ -14,7 +14,7 @@ void Defender::update_state() {
   }
 }
 
-[[nodiscard]] std::optional<size_t> Defender::get_nearest_attacker_index(
+std::optional<size_t> Defender::get_nearest_attacker_index(
     const std::vector<Attacker> &attackers) const {
   if (attackers.empty()) {
     return std::nullopt;

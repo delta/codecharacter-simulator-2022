@@ -17,7 +17,7 @@ public:
 
   [[nodiscard]] const std::vector<Defender> &get_defenders() const;
 
-  Game simulate(
+  [[nodiscard]] Game simulate(
       const std::vector<std::pair<Position, AttackerType>> &spawn_postions);
 
   [[nodiscard]] unsigned get_coins() const;
