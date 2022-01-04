@@ -20,6 +20,7 @@ public:
       attribute_dictionary;
 
   enum class State { SPAWNED, ATTACKING, MOVING, DEAD };
+
   Attacker(AttackerType type, Position position, unsigned hp, unsigned range,
            unsigned speed, unsigned attack_power, unsigned price,
            State state = State::SPAWNED)
@@ -38,11 +39,14 @@ public:
   void clear_destination();
 
   void set_destination(Position p);
+
   Position get_destination();
 
   void update_state() final;
 
   [[nodiscard]] AttackerType get_type() const;
+
+  [[nodiscard]] State get_state() const;
 
 private:
   void set_state(State s);

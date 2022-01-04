@@ -31,3 +31,5 @@ void Defender::update_state() {
 void Defender::set_state(State s) { this->_state = s; }
 
 DefenderType Defender::get_type() const { return this->_type; }
+
+Defender::State Defender::get_state() const { return this->_state; }

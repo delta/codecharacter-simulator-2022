@@ -37,6 +37,8 @@ public:
 
   [[nodiscard]] DefenderType get_type() const;
 
+  [[nodiscard]] State get_state() const;
+
 private:
   static inline size_t _id_counter;
   DefenderType _type;

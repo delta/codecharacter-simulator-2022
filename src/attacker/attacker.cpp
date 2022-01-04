@@ -73,3 +73,5 @@ void Attacker::move(Position position) {
 void Attacker::set_state(State s) { this->_state = s; }
 
 AttackerType Attacker::get_type() const { return this->_type; }
+
+Attacker::State Attacker::get_state() const { return this->_state; }

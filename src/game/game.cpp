@@ -3,6 +3,7 @@
 #include <algorithm>
 
 using namespace std;
+
 Game::Game(std::vector<Attacker> attackers, std::vector<Defender> defenses,
            unsigned coins)
     : _attackers(std::move(attackers)), _defenses(std::move(defenses)),

@@ -26,5 +26,4 @@ private:
   std::vector<Attacker> _attackers;
   std::vector<Defender> _defenses;
   unsigned _coins;
-
 };
