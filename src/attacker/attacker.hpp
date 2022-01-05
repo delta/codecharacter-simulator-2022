@@ -27,6 +27,9 @@ public:
       : Actor{_id_counter++, position, hp, range, attack_power, price},
         _type(type), _state(state), _speed(speed), _destination{0, 0} {}
 
+  // Attacker(const Attacker &attacker) = default;
+  // Attacker &operator=(const Attacker &attacker) = default;
+
   [[nodiscard]] static Attacker construct(AttackerType type, Position p);
 
   [[nodiscard]] std::optional<size_t>

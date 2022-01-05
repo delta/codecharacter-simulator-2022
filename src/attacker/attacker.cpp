@@ -56,13 +56,13 @@ void Attacker::move(Position position) {
   double angle = atan((double)(position.get_y() - current_position.get_y()) /
                       (position.get_x() - current_position.get_x()));
   double step = this->_speed;
-  if (distance < this->_range) {
+  if (distance < this->get_range()) {
     // Already in range
     return;
   }
-  if (this->_speed > distance - this->_range) {
+  if (this->_speed > distance - this->get_range()) {
     // Move only to boundary of range
-    step = distance - this->_range;
+    step = distance - this->get_range();
   }
   int x_step = round(step * cos(angle));
   int y_step = round(step * sin(angle));

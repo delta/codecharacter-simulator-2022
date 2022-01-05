@@ -36,7 +36,9 @@ protected:
   size_t _id;
   Position _position;
   unsigned _hp;
-  const unsigned _range;
-  const unsigned _attack_power;
-  const unsigned _price;
+
+private:
+  unsigned _range;
+  unsigned _attack_power;
+  unsigned _price;
 };
