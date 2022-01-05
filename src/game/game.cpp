@@ -60,6 +60,22 @@ Game Game::simulate(
   ranges::for_each(defenders,
                    [](Defender &defender) { defender.update_state(); });
 
+  // remove the dead attackers
+  attackers.erase(remove_if(attackers.begin(), attackers.end(),
+                            [](const Attacker &attacker) {
+                              return attacker.get_state() ==
+                                     Attacker::State::DEAD;
+                            }),
+                  attackers.end());
+
+  // remove dead defenders
+  defenders.erase(remove_if(defenders.begin(), defenders.end(),
+                            [](const Defender &defender) {
+                              return defender.get_state() ==
+                                     Defender::State::DEAD;
+                            }),
+                  defenders.end());
+
   // new attackers are spawned here
   ranges::for_each(spawn_positions, [&](const auto &spawn_details) {
     const auto &[position, attacker_type] = spawn_details;
