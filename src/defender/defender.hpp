@@ -9,7 +9,10 @@
 #include <unordered_map>
 #include <vector>
 
-enum class DefenderType { X, Y };
+enum class DefenderType {
+  X = 1,
+  Y,
+};
 
 class Attacker;
 
