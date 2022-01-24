@@ -53,16 +53,17 @@ void Attacker::update_state() {
 void Attacker::move(Position position) {
   auto current_position = this->_position;
   auto distance = current_position.distance_to(position);
-  double angle = atan((double)(position.get_y() - current_position.get_y()) /
-                      (position.get_x() - current_position.get_x()));
+  auto delta_y = position.get_y() - current_position.get_y();
+  auto delta_x = position.get_x() - current_position.get_x();
+  double angle = atan2(delta_y, delta_x);
   double step = this->_speed;
   if (distance < this->get_range()) {
     // Already in range
     return;
   }
-  if (this->_speed > distance - this->get_range()) {
+  if (this->_speed > distance - ((int)this->get_range())) {
     // Move only to boundary of range
-    step = distance - this->get_range();
+    step = distance - (int)this->get_range();
   }
   int x_step = round(step * cos(angle));
   int y_step = round(step * sin(angle));

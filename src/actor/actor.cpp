@@ -5,6 +5,12 @@ Actor::Actor(size_t id, Position position, unsigned hp, unsigned range,
     : _id(id), _position(position), _hp(hp), _range(range),
       _attack_power(attack_power), _price(price) {}
 
+bool Actor::operator==(const Actor &other) const {
+  return this->_attack_power == other._attack_power && this->_hp == other._hp &&
+         this->_position == other._position && this->_price == other._price &&
+         this->_range == other._range;
+}
+
 void Actor::attack(Actor &opponent) const {
   opponent.take_damage(this->get_attack_power());
 }

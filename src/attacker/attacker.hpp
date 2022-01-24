@@ -28,7 +28,8 @@ public:
            unsigned speed, unsigned attack_power, unsigned price,
            State state = State::SPAWNED)
       : Actor{_id_counter++, position, hp, range, attack_power, price},
-        _type(type), _state(state), _speed(speed), _destination{0, 0} {}
+        _type(type), _state(state), _speed(speed),
+        _is_dest_set(false), _destination{0, 0} {}
 
   // Attacker(const Attacker &attacker) = default;
   // Attacker &operator=(const Attacker &attacker) = default;

@@ -12,6 +12,13 @@ public:
 
   virtual ~Actor() = default;
 
+  Actor(const Actor &other) = default;
+  Actor &operator=(const Actor &other) = default;
+  Actor(Actor &&other) = default;
+  Actor &operator=(Actor &&other) = default;
+
+  bool operator==(const Actor &other) const;
+
   [[nodiscard]] bool is_in_range(const Actor &actor) const;
 
   void attack(Actor &opponent) const;

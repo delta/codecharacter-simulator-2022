@@ -76,18 +76,19 @@ Game Game::simulate(
                             }),
                   defenders.end());
 
+  auto coins_left = this->get_coins();
   // new attackers are spawned here
   ranges::for_each(spawn_positions, [&](const auto &spawn_details) {
     const auto &[position, attacker_type] = spawn_details;
     const unsigned price = Attacker::attribute_dictionary[attacker_type].price;
-    if (price > this->get_coins()) {
+    if (price > coins_left) {
       return;
     }
-    this->_coins = this->get_coins() - price;
+    coins_left -= price;
     attackers.push_back(Attacker::construct(attacker_type, position));
   });
 
-  return {move(attackers), move(defenders), this->_coins};
+  return {move(attackers), move(defenders), coins_left};
 }
 
 const std::vector<Attacker> &Game::get_attackers() const {
@@ -97,3 +98,5 @@ const std::vector<Attacker> &Game::get_attackers() const {
 const std::vector<Defender> &Game::get_defenders() const {
   return this->_defenses;
 }
+
+unsigned Game::get_coins() const { return this->_coins; }
