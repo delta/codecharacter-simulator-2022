@@ -33,11 +33,11 @@ void Logger::log_move(size_t attacker_id, int x, int y) {
                        << ", " << attacker_id << ", " << x << ", " << y << "\n";
 }
 
-void Logger::log_shoot(size_t attacker_id, size_t defender_id,
-                       unsigned target_hp) {
+void Logger::log_shoot(char opponent_actor_type, size_t attacker_id,
+                       size_t defender_id, unsigned target_hp) {
   Logger::get_stream() << "SHOOT"
-                       << ", " << attacker_id << ", " << defender_id << ", "
-                       << target_hp << "\n";
+                       << ", " << opponent_actor_type << ", " << attacker_id
+                       << ", " << defender_id << ", " << target_hp << "\n";
 }
 
 void Logger::log_spawn(size_t attacker_id, AttackerType type, int x, int y) {

@@ -25,8 +25,8 @@ public:
   static void log_init(std::vector<Defender> &defenders);
   static void log_turn(unsigned turn);
   static void log_move(size_t attacker_id, int x, int y);
-  static void log_shoot(size_t attacker_id, size_t defender_id,
-                        unsigned target_hp);
+  static void log_shoot(char opponent_actor_type, size_t attacker_id,
+                        size_t defender_id, unsigned target_hp);
   static void log_spawn(size_t attacker_id, AttackerType type, int x, int y);
   static void log_dead(char actor_type, size_t actor_id);
   static void log_destruction(unsigned percent);

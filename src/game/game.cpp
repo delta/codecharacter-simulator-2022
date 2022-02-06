@@ -1,4 +1,5 @@
 #include "game/game.hpp"
+#include "logger/logger.hpp"
 
 #include <algorithm>
 
@@ -86,6 +87,8 @@ Game Game::simulate(
     }
     coins_left -= price;
     attackers.push_back(Attacker::construct(attacker_type, position));
+    Logger::log_spawn(attackers.back().get_id(), attacker_type,
+                      position.get_x(), position.get_y());
   });
 
   return {move(attackers), move(defenders), coins_left};

@@ -39,6 +39,9 @@ public:
 
   virtual void update_state() = 0;
 
+  virtual void log_shoot(size_t actor_id, size_t opponent_id,
+                         unsigned new_opponent_hp) const = 0;
+
 protected:
   size_t _id;
   Position _position;

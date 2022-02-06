@@ -7,15 +7,15 @@
 
 class Map {
 public:
-  Map(size_t no_of_rows, size_t no_of_cols,
-      std::vector<std::vector<int>> map_as_grid);
+  Map(std::vector<std::vector<int>> map_as_grid);
 
   static Map get(std::istream &stream);
 
   [[nodiscard]] std::vector<Defender> spawn_defenders() const;
 
+  static inline size_t no_of_rows = 64;
+  static inline size_t no_of_cols = 64;
+
 private:
-  size_t _no_of_rows;
-  size_t _no_of_cols;
   std::vector<std::vector<int>> _grid;
 };

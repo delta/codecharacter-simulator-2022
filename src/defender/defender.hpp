@@ -36,6 +36,9 @@ public:
 
   void update_state() final;
 
+  void log_shoot(size_t actor_id, size_t opponent_id,
+                 unsigned new_opponent_hp) const;
+
   void set_state(State s);
 
   [[nodiscard]] DefenderType get_type() const;

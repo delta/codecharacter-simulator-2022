@@ -1,8 +1,13 @@
 #include "utils/position.hpp"
 
+#include <algorithm>
 #include <cmath>
 
-Position::Position(int x, int y) : _x(x), _y(y) {}
+#include "utils/game_map.hpp"
+
+Position::Position(int x, int y)
+    : _x(std::clamp(x, 0, (int)Map::no_of_cols)),
+      _y(std::clamp(y, 0, (int)Map::no_of_rows)) {}
 
 int Position::get_x() const { return this->_x; }
 

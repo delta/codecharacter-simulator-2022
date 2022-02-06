@@ -3,6 +3,7 @@
 
 #include "attacker/attacker.hpp"
 #include "logger/logger.hpp"
+#include "utils/game_map.hpp"
 
 Attacker Attacker::construct(AttackerType type, Position p) {
   Attributes attr = Attacker::attribute_dictionary[type];
@@ -33,6 +34,7 @@ void Attacker::update_state() {
 
   if (this->get_hp() == 0) {
     this->set_state(State::DEAD);
+    Logger::log_dead('A', this->_id);
   }
 }
 
@@ -63,12 +65,18 @@ void Attacker::move(Position position) {
   }
   if (this->_speed > distance - ((int)this->get_range())) {
     // Move only to boundary of range
-    step = distance - (int)this->get_range();
+    step = std::max(distance - (int)this->get_range(), 0.0);
   }
   int x_step = round(step * cos(angle));
   int y_step = round(step * sin(angle));
-  this->_position = Position(current_position.get_x() + x_step,
-                             current_position.get_y() + y_step);
+
+  int new_x = std::clamp(current_position.get_x() + x_step, 1,
+                         (int)Map::no_of_cols - 1);
+  int new_y = std::clamp(current_position.get_y() + y_step, 1,
+                         (int)Map::no_of_rows - 1);
+  this->_position = Position(new_x, new_y);
+
+  Logger::log_move(this->_id, this->_position.get_x(), this->_position.get_y());
 }
 
 void Attacker::set_state(State s) { this->_state = s; }
@@ -76,3 +84,8 @@ void Attacker::set_state(State s) { this->_state = s; }
 AttackerType Attacker::get_type() const { return this->_type; }
 
 Attacker::State Attacker::get_state() const { return this->_state; }
+
+void Attacker::log_shoot(size_t actor_id, size_t opponent_id,
+                         unsigned new_opponent_hp) const {
+  Logger::log_shoot('D', actor_id, opponent_id, new_opponent_hp);
+}
