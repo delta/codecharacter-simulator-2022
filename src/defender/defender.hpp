@@ -9,7 +9,10 @@
 #include <unordered_map>
 #include <vector>
 
-enum class DefenderType { X, Y };
+enum class DefenderType {
+  X = 1,
+  Y,
+};
 
 class Attacker;
 
@@ -26,7 +29,7 @@ public:
       : Actor{_id_counter++, position, hp, range, attack_power, price},
         _type(type), _state(state) {}
 
-  static Defender construct(DefenderType type, Position p);
+  [[nodiscard]] static Defender construct(DefenderType type, Position p);
 
   [[nodiscard]] std::optional<size_t>
   get_nearest_attacker_index(const std::vector<Attacker> &attackers) const;
@@ -36,6 +39,8 @@ public:
   void set_state(State s);
 
   [[nodiscard]] DefenderType get_type() const;
+
+  [[nodiscard]] State get_state() const;
 
 private:
   static inline size_t _id_counter;

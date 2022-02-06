@@ -14,7 +14,7 @@ void Defender::update_state() {
   }
 }
 
-[[nodiscard]] std::optional<size_t> Defender::get_nearest_attacker_index(
+std::optional<size_t> Defender::get_nearest_attacker_index(
     const std::vector<Attacker> &attackers) const {
   if (attackers.empty()) {
     return std::nullopt;
@@ -31,3 +31,5 @@ void Defender::update_state() {
 void Defender::set_state(State s) { this->_state = s; }
 
 DefenderType Defender::get_type() const { return this->_type; }
+
+Defender::State Defender::get_state() const { return this->_state; }

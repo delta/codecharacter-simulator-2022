@@ -3,6 +3,7 @@
 #include <algorithm>
 
 using namespace std;
+
 Game::Game(std::vector<Attacker> attackers, std::vector<Defender> defenses,
            unsigned coins)
     : _attackers(std::move(attackers)), _defenses(std::move(defenses)),
@@ -59,18 +60,35 @@ Game Game::simulate(
   ranges::for_each(defenders,
                    [](Defender &defender) { defender.update_state(); });
 
+  // remove the dead attackers
+  attackers.erase(remove_if(attackers.begin(), attackers.end(),
+                            [](const Attacker &attacker) {
+                              return attacker.get_state() ==
+                                     Attacker::State::DEAD;
+                            }),
+                  attackers.end());
+
+  // remove dead defenders
+  defenders.erase(remove_if(defenders.begin(), defenders.end(),
+                            [](const Defender &defender) {
+                              return defender.get_state() ==
+                                     Defender::State::DEAD;
+                            }),
+                  defenders.end());
+
+  auto coins_left = this->get_coins();
   // new attackers are spawned here
   ranges::for_each(spawn_positions, [&](const auto &spawn_details) {
     const auto &[position, attacker_type] = spawn_details;
     const unsigned price = Attacker::attribute_dictionary[attacker_type].price;
-    if (price > this->get_coins()) {
+    if (price > coins_left) {
       return;
     }
-    this->_coins = this->get_coins() - price;
+    coins_left -= price;
     attackers.push_back(Attacker::construct(attacker_type, position));
   });
 
-  return {move(attackers), move(defenders), this->_coins};
+  return {move(attackers), move(defenders), coins_left};
 }
 
 const std::vector<Attacker> &Game::get_attackers() const {
@@ -80,3 +98,5 @@ const std::vector<Attacker> &Game::get_attackers() const {
 const std::vector<Defender> &Game::get_defenders() const {
   return this->_defenses;
 }
+
+unsigned Game::get_coins() const { return this->_coins; }

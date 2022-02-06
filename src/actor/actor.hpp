@@ -12,6 +12,13 @@ public:
 
   virtual ~Actor() = default;
 
+  Actor(const Actor &other) = default;
+  Actor &operator=(const Actor &other) = default;
+  Actor(Actor &&other) = default;
+  Actor &operator=(Actor &&other) = default;
+
+  bool operator==(const Actor &other) const;
+
   [[nodiscard]] bool is_in_range(const Actor &actor) const;
 
   void attack(Actor &opponent) const;
@@ -36,7 +43,9 @@ protected:
   size_t _id;
   Position _position;
   unsigned _hp;
-  const unsigned _range;
-  const unsigned _attack_power;
-  const unsigned _price;
+
+private:
+  unsigned _range;
+  unsigned _attack_power;
+  unsigned _price;
 };
