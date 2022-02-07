@@ -1,0 +1,70 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+env:
+  BUILD_TYPE: Release
+  CC: gcc-11
+  CXX: g++-11
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Install ubuntu dependencies
+      run: sudo apt-get install ninja-build gcc-11 g++-11 libstdc++-11-dev clang-format
+
+    - name: Checkout the repository
+      uses: actions/checkout@v2
+
+    - name: Set up Python 3.9
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.9
+
+    - name: Attempt to use cached dependencies
+      id: cache-python
+      uses: actions/cache@v2
+      with:
+        path: ${{ env.pythonLocation }}
+        key: ${{ env.pythonLocation }}-${{ hashFiles('requirements.txt') }}
+    - name: Installing python dependencies
+      if: steps.cache-python.outputs.cache-hit != 'true'
+      run: pip install -r requirements.txt
+
+    - name: Attempt to use cached dependencies
+      id: cache-conan
+      uses: actions/cache@v2
+      with:
+        path: /home/runner/.conan
+        key: conan-cache-${{ hashFiles('conanfile.txt') }}
+
+    - name: Install conan dependencies
+      if: steps.cache-conan.outputs.cache-hit != 'true'
+      run: bash setup_build.sh
+
+    - name: Attempt to use cached build files
+      id: cache-cmake
+      uses: actions/cache@v2
+      with:
+        path: ${{github.workspace}}/build
+        key: cmake-cache-${{ hashFiles('CMakeLists.txt') }}
+
+    - name: Configure CMake
+      if: steps.cache-cmake.outputs.cache-hit != 'true'
+      run: cmake -G Ninja -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+
+    - name: Build
+      working-directory: ${{github.workspace}}/build
+      run: ninja all
+
+    - name: Release
+      uses: softprops/action-gh-release@v1
+      if: startsWith(github.ref, 'refs/tags/')
+      with:
+        files: build/bin/main
+        generate_release_notes: true
