@@ -21,7 +21,7 @@ public:
 
   [[nodiscard]] bool is_in_range(const Actor &actor) const;
 
-  void attack(Actor &opponent) const;
+  virtual void attack(Actor &opponent) const = 0;
 
   void take_damage(unsigned damage);
 
@@ -38,9 +38,6 @@ public:
   [[nodiscard]] Position get_position() const;
 
   virtual void update_state() = 0;
-
-  virtual void log_shoot(size_t actor_id, size_t opponent_id,
-                         unsigned new_opponent_hp) const = 0;
 
 protected:
   size_t _id;

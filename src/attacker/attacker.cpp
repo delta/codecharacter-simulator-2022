@@ -79,13 +79,13 @@ void Attacker::move(Position position) {
   Logger::log_move(this->_id, this->_position.get_x(), this->_position.get_y());
 }
 
+void Attacker::attack(Actor &opponent) const {
+  opponent.take_damage(this->get_attack_power());
+  Logger::log_shoot('D', this->_id, opponent.get_id(), opponent.get_hp());
+}
+
 void Attacker::set_state(State s) { this->_state = s; }
 
 AttackerType Attacker::get_type() const { return this->_type; }
 
 Attacker::State Attacker::get_state() const { return this->_state; }
-
-void Attacker::log_shoot(size_t actor_id, size_t opponent_id,
-                         unsigned new_opponent_hp) const {
-  Logger::log_shoot('D', actor_id, opponent_id, new_opponent_hp);
-}

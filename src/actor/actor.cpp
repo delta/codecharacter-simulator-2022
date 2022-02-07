@@ -14,11 +14,6 @@ bool Actor::operator==(const Actor &other) const {
          this->_range == other._range;
 }
 
-void Actor::attack(Actor &opponent) const {
-  opponent.take_damage(this->get_attack_power());
-  this->log_shoot(this->_id, opponent.get_id(), opponent.get_hp());
-}
-
 void Actor::take_damage(unsigned damage) {
   if (damage <= this->_hp) {
     this->_hp -= damage;

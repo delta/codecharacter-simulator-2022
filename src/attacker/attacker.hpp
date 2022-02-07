@@ -38,6 +38,8 @@ public:
 
   void move(Position position);
 
+  void attack(Actor &opponent) const override;
+
   [[nodiscard]] bool is_destination_set() const;
 
   void clear_destination();
@@ -47,9 +49,6 @@ public:
   [[nodiscard]] Position get_destination() const;
 
   void update_state() final;
-
-  void log_shoot(size_t actor_id, size_t opponent_id,
-                 unsigned new_opponent_hp) const;
 
   [[nodiscard]] AttackerType get_type() const;
 

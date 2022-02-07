@@ -31,13 +31,12 @@ public:
 
   [[nodiscard]] static Defender construct(DefenderType type, Position p);
 
+  void attack(Actor &opponent) const override;
+
   [[nodiscard]] std::optional<size_t>
   get_nearest_attacker_index(const std::vector<Attacker> &attackers) const;
 
   void update_state() final;
-
-  void log_shoot(size_t actor_id, size_t opponent_id,
-                 unsigned new_opponent_hp) const;
 
   void set_state(State s);
 
