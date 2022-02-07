@@ -1,4 +1,7 @@
 #include "actor/actor.hpp"
+#include "logger/logger.hpp"
+
+#include <cmath>
 
 Actor::Actor(size_t id, Position position, unsigned hp, unsigned range,
              unsigned attack_power, unsigned price)
@@ -11,12 +14,12 @@ bool Actor::operator==(const Actor &other) const {
          this->_range == other._range;
 }
 
-void Actor::attack(Actor &opponent) const {
-  opponent.take_damage(this->get_attack_power());
-}
-
 void Actor::take_damage(unsigned damage) {
-  this->_hp -= std::min(damage, this->_hp);
+  if (damage <= this->_hp) {
+    this->_hp -= damage;
+  } else {
+    this->_hp = 0;
+  }
 }
 
 size_t Actor::get_id() const { return this->_id; }
@@ -32,6 +35,6 @@ unsigned Actor::get_range() const { return this->_range; }
 Position Actor::get_position() const { return this->_position; }
 
 bool Actor::is_in_range(const Actor &actor) const {
-  return this->get_position().distance_to(actor.get_position()) <=
+  return round(this->get_position().distance_to(actor.get_position())) <=
          (double)this->_range;
 }

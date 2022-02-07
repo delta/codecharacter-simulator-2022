@@ -38,6 +38,8 @@ public:
 
   void move(Position position);
 
+  void attack(Actor &opponent) const override;
+
   [[nodiscard]] bool is_destination_set() const;
 
   void clear_destination();

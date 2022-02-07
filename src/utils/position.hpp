@@ -8,9 +8,6 @@ private:
   int _y;
 
 public:
-  /*
-   *  handle out of map positions
-   */
   Position(int x, int y);
   [[nodiscard]] int get_x() const;
   [[nodiscard]] int get_y() const;

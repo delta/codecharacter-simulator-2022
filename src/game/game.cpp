@@ -1,4 +1,5 @@
 #include "game/game.hpp"
+#include "logger/logger.hpp"
 
 #include <algorithm>
 
