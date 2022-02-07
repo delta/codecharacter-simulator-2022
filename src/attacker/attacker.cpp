@@ -7,6 +7,7 @@
 
 Attacker Attacker::construct(AttackerType type, Position p) {
   Attributes attr = Attacker::attribute_dictionary[type];
+  Logger::log_spawn(_id_counter, type, p.get_x(), p.get_y());
   return {type,       p,
           attr.hp,    attr.range,
           attr.speed, attr.attack_power,
