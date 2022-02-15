@@ -1,7 +1,5 @@
 #include "utils/position.hpp"
 
-#include <algorithm>
-#include <array>
 #include <cmath>
 
 #include "utils/game_map.hpp"

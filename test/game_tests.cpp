@@ -74,7 +74,7 @@ SCENARIO("Game::simulate") {
                                                    )));
     std::vector<Defender> defenders_initial_state = game_map.spawn_defenders();
     Game game(std::vector<Attacker>{}, defenders_initial_state,
-              1000 // number of coins
+              1200 // number of coins
     );
     std::vector<std::pair<Position, AttackerType>> initial_spawn_positions{
         {{0, 4}, AttackerType::X}, // cost 100
@@ -86,7 +86,10 @@ SCENARIO("Game::simulate") {
 
     std::vector<std::pair<Position, AttackerType>> third_turn_spawn_pos = {
         {{9, 9}, AttackerType::Y},
-        {{0, 0}, AttackerType::Y}}; // cost will be 150+150
+        {{3, 3}, AttackerType::Y}, // this is invalid postion, so i'll be fined
+                                   // only but the attacker wont be spawned, but
+                                   // money is gone
+        {{0, 0}, AttackerType::Y}}; // cost will be 150+150+150
 
     Game first_turn_state = game.simulate(initial_spawn_positions);
     Game second_turn_state = first_turn_state.simulate({});
@@ -249,9 +252,10 @@ SCENARIO("Game::simulate") {
     }
 
     WHEN("THIRD TURN") {
-      THEN("Game coin reduced by 300 from last turn") {
+      THEN("Game coin reduced by 450 from last turn, 150 is fine for trying to "
+           "spawn at invalid position") {
         REQUIRE(third_turn_state.get_coins() ==
-                second_turn_state.get_coins() - 300);
+                second_turn_state.get_coins() - 450);
       }
       THEN("Two new attackers spawned") {
         REQUIRE(std::array{third_turn_state.get_attackers().end()[-2],
