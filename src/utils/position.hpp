@@ -13,5 +13,5 @@ public:
   [[nodiscard]] int get_y() const;
   [[nodiscard]] double distance_to(Position other) const;
   auto operator<=>(const Position &other) const = default;
-  static bool is_valid(int x, int y);
+  static bool is_valid_spawn_position(int x, int y);
 };

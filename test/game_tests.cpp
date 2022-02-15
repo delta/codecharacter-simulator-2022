@@ -91,16 +91,6 @@ SCENARIO("Game::simulate") {
     Game first_turn_state = game.simulate(initial_spawn_positions);
     Game second_turn_state = first_turn_state.simulate({});
     Game third_turn_state = second_turn_state.simulate(third_turn_spawn_pos);
-    std::cout
-        << (second_turn_state.get_attackers()[4].get_destination().get_x())
-        << ','
-        << (second_turn_state.get_attackers()[4].get_destination().get_y())
-        << '\n';
-    std::cout << (second_turn_state.get_attackers()[4].get_position().get_x())
-              << ','
-              << (second_turn_state.get_attackers()[4].get_position().get_y())
-              << '\n';
-    std::cout << "F\n";
 
     WHEN("FIRST TURN") {
       THEN("ONLY NEW ATTACKERS WILL BE SPAWNED IN THE GAME, ALL DEFENDERS ARE "
