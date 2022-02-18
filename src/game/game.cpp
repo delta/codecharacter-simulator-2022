@@ -50,9 +50,10 @@ Game Game::simulate(
       });
 
   // Attacker Loop
-  ranges::for_each(prev_state_attackers, [&, index = 0](
-                                             const Attacker &attacker) mutable {
+  ranges::for_each(attackers, [&](Attacker &attacker) mutable {
     std::optional<index_t> defender_index{std::nullopt};
+
+    // auto &new_state_attacker = attackers[index];
 
     if (attacker.is_target_set_by_player() &&
         this->get_defender_index_by_id(attacker.get_target_id())) {
@@ -60,42 +61,35 @@ Game Game::simulate(
     } else {
       // if it's here it shouldn't have a target or its target is invalid/doesnt
       // exist
-      attackers[index].clear_target();
+      attacker.clear_target();
       defender_index =
           attacker.get_nearest_defender_index(prev_state_defenders);
     }
 
-    auto &new_state_attacker = attackers[index];
-
     if (defender_index.has_value()) {
-      if (new_state_attacker.is_in_range(defenders[*defender_index])) {
-        new_state_attacker.attack(defenders[*defender_index]);
+      if (attacker.is_in_range(defenders[*defender_index])) {
+        attacker.attack(defenders[*defender_index]);
       } else {
-        new_state_attacker.set_destination(
-            defenders[*defender_index].get_position());
+        attacker.set_destination(defenders[*defender_index].get_position());
       }
     }
-
-    index++;
   });
 
   // Defense loop
-  ranges::for_each(
-      prev_state_defenders, [&, index = 0](const Defender &defender) mutable {
-        auto &new_state_defender = defenders[index];
-        if (auto attacker_index =
-                defender.get_nearest_attacker_index(prev_state_attackers)) {
-          if (new_state_defender.is_in_range(attackers[*attacker_index])) {
-            new_state_defender.attack(attackers[*attacker_index]);
-            // set defender's state to ATTACKING
-            new_state_defender.set_state(Defender::State::ATTACKING);
-          } else {
-            // set defender's state to IDLE
-            new_state_defender.set_state(Defender::State::IDLE);
-          }
-        }
-        index++;
-      });
+  ranges::for_each(defenders, [&](Defender &defender) mutable {
+    // auto &new_state_defender = defenders[index];
+    if (auto attacker_index =
+            defender.get_nearest_attacker_index(prev_state_attackers)) {
+      if (defender.is_in_range(attackers[*attacker_index])) {
+        defender.attack(attackers[*attacker_index]);
+        // set defender's state to ATTACKING
+        defender.set_state(Defender::State::ATTACKING);
+      } else {
+        // set defender's state to IDLE
+        defender.set_state(Defender::State::IDLE);
+      }
+    }
+  });
 
   // state update loop for attackers and defenders
   ranges::for_each(attackers,
