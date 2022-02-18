@@ -25,6 +25,19 @@ void Attacker::set_destination(Position p) {
 
 Position Attacker::get_destination() const { return this->_destination; }
 
+bool Attacker::is_target_set_by_player() const {
+  return this->_is_target_set_by_player;
+}
+
+size_t Attacker::get_target_id() const { return this->_target_id; }
+
+void Attacker::set_target(size_t defender_id) {
+  this->_is_target_set_by_player = true;
+  this->_target_id = defender_id;
+}
+
+void Attacker::clear_target() { this->_is_target_set_by_player = false; }
+
 void Attacker::update_state() {
   if (this->is_destination_set()) {
     this->set_state(State::MOVING);

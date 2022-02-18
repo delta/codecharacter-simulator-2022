@@ -2,16 +2,27 @@
 #include "logger/logger.hpp"
 
 #include <algorithm>
+#include <unordered_set>
 
 using namespace std;
 
-Game::Game(std::vector<Attacker> attackers, std::vector<Defender> defenses,
+Game::Game(std::vector<Attacker> attackers, std::vector<Defender> defenders,
            unsigned coins)
-    : _attackers(std::move(attackers)), _defenses(std::move(defenses)),
-      _coins(coins) {}
+    : _attackers(std::move(attackers)), _defenders(std::move(defenders)),
+      _coins(coins) {
+  // make all the id to index maps in constructor itself
+  ranges::for_each(this->_attackers,
+                   [&, index = 0](const Attacker &attacker) mutable {
+                     this->_attacker_id_to_index[attacker.get_id()] = index++;
+                   });
+  ranges::for_each(this->_defenders,
+                   [&, index = 0](const Defender &defender) mutable {
+                     this->_defender_id_to_index[defender.get_id()] = index++;
+                   });
+}
 
-Game Game::simulate(
-    const std::vector<std::pair<Position, AttackerType>> &spawn_positions) {
+Game Game::simulate(const std::vector<std::pair<Position, AttackerType>>
+                        &spawn_positions) const {
 
   const auto &prev_state_attackers = this->get_attackers();
   const auto &prev_state_defenders = this->get_defenders();
@@ -24,32 +35,48 @@ Game Game::simulate(
                    [](Attacker &attacker) { attacker.clear_destination(); });
 
   // Attacker Loop
-  ranges::for_each(
-      prev_state_attackers, [&, index = 0](const Attacker &attacker) mutable {
-        if (auto defender_index =
-                attacker.get_nearest_defender_index(prev_state_defenders)) {
-          if (attacker.is_in_range(defenders[*defender_index])) {
-            attacker.attack(defenders[*defender_index]);
-          } else {
-            attackers[index].set_destination(
-                defenders[*defender_index].get_position());
-          }
-        }
-        index++;
-      });
+  ranges::for_each(prev_state_attackers, [&, index = 0](
+                                             const Attacker &attacker) mutable {
+    std::optional<size_t> defender_index{std::nullopt};
+
+    if (attacker.is_target_set_by_player() &&
+        this->get_defender_index_by_id(attacker.get_target_id())) {
+      defender_index = this->get_defender_index_by_id(attacker.get_target_id());
+    } else {
+      // if it's here it shouldn't have a target or its target is invalid/doesnt
+      // exist
+      attackers[index].clear_target();
+      defender_index =
+          attacker.get_nearest_defender_index(prev_state_defenders);
+    }
+
+    auto &new_state_attacker = attackers[index];
+
+    if (defender_index.has_value()) {
+      if (new_state_attacker.is_in_range(defenders[*defender_index])) {
+        new_state_attacker.attack(defenders[*defender_index]);
+      } else {
+        new_state_attacker.set_destination(
+            defenders[*defender_index].get_position());
+      }
+    }
+
+    index++;
+  });
 
   // Defense loop
   ranges::for_each(
       prev_state_defenders, [&, index = 0](const Defender &defender) mutable {
+        auto &new_state_defender = defenders[index];
         if (auto attacker_index =
                 defender.get_nearest_attacker_index(prev_state_attackers)) {
-          if (defender.is_in_range(attackers[*attacker_index])) {
-            defender.attack(attackers[*attacker_index]);
+          if (new_state_defender.is_in_range(attackers[*attacker_index])) {
+            new_state_defender.attack(attackers[*attacker_index]);
             // set defender's state to ATTACKING
-            defenders[index].set_state(Defender::State::ATTACKING);
+            new_state_defender.set_state(Defender::State::ATTACKING);
           } else {
             // set defender's state to IDLE
-            defenders[index].set_state(Defender::State::IDLE);
+            new_state_defender.set_state(Defender::State::IDLE);
           }
         }
         index++;
@@ -58,8 +85,24 @@ Game Game::simulate(
   // state update loop for attackers and defenders
   ranges::for_each(attackers,
                    [](Attacker &attacker) { attacker.update_state(); });
-  ranges::for_each(defenders,
-                   [](Defender &defender) { defender.update_state(); });
+
+  // Stores the position of all the defenders that died at the end of this turn
+  std::unordered_set<size_t> dead_defender_positions;
+
+  ranges::for_each(defenders, [&](Defender &defender) {
+    defender.update_state();
+    if (defender.get_state() == Defender::State::DEAD) {
+      dead_defender_positions.insert(defender.get_id());
+    }
+  });
+
+  // Clear the destination of all the attackers whose target is dead
+  ranges::for_each(attackers, [&](Attacker &attacker) {
+    if (attacker.is_target_set_by_player() &&
+        dead_defender_positions.contains(attacker.get_target_id())) {
+      attacker.clear_target();
+    }
+  });
 
   // remove the dead attackers
   attackers.erase(remove_if(attackers.begin(), attackers.end(),
@@ -78,6 +121,7 @@ Game Game::simulate(
                   defenders.end());
 
   auto coins_left = this->get_coins();
+
   // new attackers are spawned here
   ranges::for_each(spawn_positions, [&](const auto &spawn_details) {
     const auto &[position, attacker_type] = spawn_details;
@@ -103,7 +147,20 @@ const std::vector<Attacker> &Game::get_attackers() const {
 }
 
 const std::vector<Defender> &Game::get_defenders() const {
-  return this->_defenses;
+  return this->_defenders;
 }
 
 unsigned Game::get_coins() const { return this->_coins; }
+
+std::optional<size_t> Game::get_attacker_index_by_id(size_t id) const {
+  if (this->_attacker_id_to_index.contains(id)) {
+    return this->_attacker_id_to_index.at(id);
+  }
+  return std::nullopt;
+}
+std::optional<size_t> Game::get_defender_index_by_id(size_t id) const {
+  if (this->_defender_id_to_index.contains(id)) {
+    return this->_defender_id_to_index.at(id);
+  }
+  return std::nullopt;
+}
