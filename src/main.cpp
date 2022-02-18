@@ -36,10 +36,6 @@ int main() {
   auto map = Map::get(std::cin);
   auto defenders = map.spawn_defenders();
 
-  for (auto defender : defenders) {
-    std::cerr << defender.get_hp() << std::endl;
-  }
-
   auto initial_hp = std::accumulate(defenders.begin(), defenders.end(), 0,
                                     [](unsigned acc, const Defender &defender) {
                                       return acc + defender.get_hp();
