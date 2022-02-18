@@ -62,8 +62,17 @@ int main() {
       spawn_positions.emplace_back(
           std::make_pair(Position(x, y), AttackerType(type_id)));
     }
+
+    //  Get all the manually to be set targets as input, we need attacker's id
+    //  and targetted defender id
     std::unordered_map<Game::attacker_id, Game::defender_id> player_set_targets;
-    // TODO: get as input
+    int no_of_player_set_targets = 0;
+    std::cin >> no_of_player_set_targets;
+    while ((no_of_player_set_targets--) > 0) {
+      Game::attacker_id att_id = 0;
+      Game::defender_id def_id = 0;
+      std::cin >> att_id >> def_id;
+    }
 
     game = game.simulate(player_set_targets, spawn_positions);
 
