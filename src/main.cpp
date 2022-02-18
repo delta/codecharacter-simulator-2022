@@ -62,7 +62,10 @@ int main() {
       spawn_positions.emplace_back(
           std::make_pair(Position(x, y), AttackerType(type_id)));
     }
-    game = game.simulate(spawn_positions);
+    std::unordered_map<Game::attacker_id, Game::defender_id> player_set_targets;
+    // TODO: get as input
+
+    game = game.simulate(player_set_targets, spawn_positions);
 
     auto active_attackers = game.get_attackers();
     std::cout << active_attackers.size() << "\n";

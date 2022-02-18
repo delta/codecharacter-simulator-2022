@@ -36,6 +36,19 @@ Game Game::simulate(
   ranges::for_each(attackers,
                    [](Attacker &attacker) { attacker.clear_destination(); });
 
+  ranges::for_each(
+      player_set_targets,
+      [&](const std::pair<attacker_id, defender_id> &entry) {
+        auto attacker_index = this->get_attacker_index_by_id(entry.first);
+        auto defender_index = this->get_defender_index_by_id(entry.second);
+        // Getting the defender_index and checking its validity will ensure that
+        // its a defender id that is currently in the map.
+        if (attacker_index.has_value() && defender_index.has_value()) {
+          attackers[*attacker_index].set_target(
+              defenders[*defender_index].get_id());
+        }
+      });
+
   // Attacker Loop
   ranges::for_each(prev_state_attackers, [&, index = 0](
                                              const Attacker &attacker) mutable {
@@ -102,6 +115,9 @@ Game Game::simulate(
   ranges::for_each(attackers, [&](Attacker &attacker) {
     if (attacker.is_target_set_by_player() &&
         dead_defender_ids.contains(attacker.get_target_id())) {
+      // doing this so that next turn the player can be handled by the
+      // simulation automatically if the player chooses not to set the target
+      // manually again
       attacker.clear_target();
     }
   });

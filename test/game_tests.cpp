@@ -91,9 +91,20 @@ SCENARIO("Game::simulate") {
                                    // money is gone
         {{0, 0}, AttackerType::Y}}; // cost will be 150+150+150
 
-    Game first_turn_state = game.simulate(initial_spawn_positions);
-    Game second_turn_state = first_turn_state.simulate({});
-    Game third_turn_state = second_turn_state.simulate(third_turn_spawn_pos);
+    // TODO : add some values in these and test the workings
+    std::unordered_map<Game::attacker_id, Game::defender_id>
+        first_turn_player_set_targets;
+    std::unordered_map<Game::attacker_id, Game::defender_id>
+        second_turn_player_set_targets;
+    std::unordered_map<Game::attacker_id, Game::defender_id>
+        third_turn_player_set_targets;
+
+    Game first_turn_state =
+        game.simulate(first_turn_player_set_targets, initial_spawn_positions);
+    Game second_turn_state =
+        first_turn_state.simulate(second_turn_player_set_targets, {});
+    Game third_turn_state = second_turn_state.simulate(
+        third_turn_player_set_targets, third_turn_spawn_pos);
 
     WHEN("FIRST TURN") {
       THEN("ONLY NEW ATTACKERS WILL BE SPAWNED IN THE GAME, ALL DEFENDERS ARE "
