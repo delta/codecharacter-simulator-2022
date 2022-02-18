@@ -43,9 +43,7 @@ if(NOT BUILD_PROJECT STREQUAL "no_tests")
   include(${CMAKE_SCRIPTS_PATH}/cmake-format.cmake)
 endif()
 
-if(BUILD_PROJECT STREQUAL "simulator")
-
-elseif(BUILD_PROJECT STREQUAL "no_tests")
+if(BUILD_PROJECT STREQUAL "no_tests")
   add_subdirectory(src)
 else()
   add_subdirectory(src)

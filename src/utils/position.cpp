@@ -1,6 +1,5 @@
 #include "utils/position.hpp"
 
-#include <algorithm>
 #include <cmath>
 
 #include "utils/game_map.hpp"
@@ -17,4 +16,13 @@ double Position::distance_to(Position other) const {
   auto delta_x = other.get_x() - this->get_x();
   auto delta_y = other.get_y() - this->get_y();
   return sqrt((double)(delta_x * delta_x + delta_y * delta_y));
+}
+
+bool Position::is_valid_spawn_position(int x, int y) {
+  if (x < 0 || y < 0 || x >= static_cast<int>(Map::no_of_rows) ||
+      y >= static_cast<int>(Map::no_of_cols)) {
+    return false;
+  }
+  return x == 0 || y == 0 || (x == (static_cast<int>(Map::no_of_rows) - 1)) ||
+         (y == (static_cast<int>(Map::no_of_cols) - 1));
 }
