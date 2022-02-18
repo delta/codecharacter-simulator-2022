@@ -21,8 +21,10 @@ Game::Game(std::vector<Attacker> attackers, std::vector<Defender> defenders,
                    });
 }
 
-Game Game::simulate(const std::vector<std::pair<Position, AttackerType>>
-                        &spawn_positions) const {
+Game Game::simulate(
+    const std::unordered_map<attacker_id, defender_id> &player_set_targets,
+    const std::vector<std::pair<Position, AttackerType>> &spawn_positions)
+    const {
 
   const auto &prev_state_attackers = this->get_attackers();
   const auto &prev_state_defenders = this->get_defenders();
@@ -37,7 +39,7 @@ Game Game::simulate(const std::vector<std::pair<Position, AttackerType>>
   // Attacker Loop
   ranges::for_each(prev_state_attackers, [&, index = 0](
                                              const Attacker &attacker) mutable {
-    std::optional<size_t> defender_index{std::nullopt};
+    std::optional<index_t> defender_index{std::nullopt};
 
     if (attacker.is_target_set_by_player() &&
         this->get_defender_index_by_id(attacker.get_target_id())) {
@@ -87,19 +89,19 @@ Game Game::simulate(const std::vector<std::pair<Position, AttackerType>>
                    [](Attacker &attacker) { attacker.update_state(); });
 
   // Stores the position of all the defenders that died at the end of this turn
-  std::unordered_set<size_t> dead_defender_positions;
+  std::unordered_set<defender_id> dead_defender_ids;
 
   ranges::for_each(defenders, [&](Defender &defender) {
     defender.update_state();
     if (defender.get_state() == Defender::State::DEAD) {
-      dead_defender_positions.insert(defender.get_id());
+      dead_defender_ids.insert(defender.get_id());
     }
   });
 
   // Clear the destination of all the attackers whose target is dead
   ranges::for_each(attackers, [&](Attacker &attacker) {
     if (attacker.is_target_set_by_player() &&
-        dead_defender_positions.contains(attacker.get_target_id())) {
+        dead_defender_ids.contains(attacker.get_target_id())) {
       attacker.clear_target();
     }
   });
@@ -152,13 +154,15 @@ const std::vector<Defender> &Game::get_defenders() const {
 
 unsigned Game::get_coins() const { return this->_coins; }
 
-std::optional<size_t> Game::get_attacker_index_by_id(size_t id) const {
+std::optional<Game::index_t>
+Game::get_attacker_index_by_id(attacker_id id) const {
   if (this->_attacker_id_to_index.contains(id)) {
     return this->_attacker_id_to_index.at(id);
   }
   return std::nullopt;
 }
-std::optional<size_t> Game::get_defender_index_by_id(size_t id) const {
+std::optional<Game::index_t>
+Game::get_defender_index_by_id(defender_id id) const {
   if (this->_defender_id_to_index.contains(id)) {
     return this->_defender_id_to_index.at(id);
   }
