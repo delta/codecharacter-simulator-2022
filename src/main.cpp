@@ -72,6 +72,7 @@ int main() {
       Game::attacker_id att_id = 0;
       Game::defender_id def_id = 0;
       std::cin >> att_id >> def_id;
+      player_set_targets[att_id] = def_id;
     }
 
     game = game.simulate(player_set_targets, spawn_positions);
