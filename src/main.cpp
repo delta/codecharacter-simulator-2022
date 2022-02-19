@@ -97,7 +97,7 @@ int main() {
                           return acc + defender.get_hp();
                         });
 
-    Logger::log_destruction((initial_hp - current_hp) * 100 / initial_hp);
+    Logger::log_destruction(initial_hp == 0 ? 0 : (initial_hp - current_hp) * 100.0 / initial_hp);
     Logger::log_coins(game.get_coins());
   }
   Logger::log_end();

@@ -52,9 +52,6 @@ Game Game::simulate(
   // Attacker Loop
   ranges::for_each(attackers, [&](Attacker &attacker) mutable {
     std::optional<index_t> defender_index{std::nullopt};
-
-    // auto &new_state_attacker = attackers[index];
-
     if (attacker.is_target_set_by_player() &&
         this->get_defender_index_by_id(attacker.get_target_id())) {
       defender_index = this->get_defender_index_by_id(attacker.get_target_id());
@@ -77,7 +74,6 @@ Game Game::simulate(
 
   // Defense loop
   ranges::for_each(defenders, [&](Defender &defender) mutable {
-    // auto &new_state_defender = defenders[index];
     if (auto attacker_index =
             defender.get_nearest_attacker_index(prev_state_attackers)) {
       if (defender.is_in_range(attackers[*attacker_index])) {

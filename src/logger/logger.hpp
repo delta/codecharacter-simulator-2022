@@ -29,7 +29,7 @@ public:
                         size_t defender_id, unsigned target_hp);
   static void log_spawn(size_t attacker_id, AttackerType type, int x, int y);
   static void log_dead(char actor_type, size_t actor_id);
-  static void log_destruction(unsigned percent);
+  static void log_destruction(double percent);
   static void log_coins(unsigned coins);
   static void log_end();
   [[nodiscard]] static std::string get_log();
