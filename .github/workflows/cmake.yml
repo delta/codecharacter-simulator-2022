@@ -32,7 +32,7 @@ jobs:
       uses: actions/cache@v2
       with:
         path: ${{ env.pythonLocation }}
-        key: ${{ env.pythonLocation }}-${{ hashFiles('requirements.txt') }}
+        key: ${{ env.pythonLocation }}-tmp-${{ hashFiles('requirements.txt') }}
     - name: Installing python dependencies
       if: steps.cache-python.outputs.cache-hit != 'true'
       run: pip install -r requirements.txt
@@ -42,7 +42,7 @@ jobs:
       uses: actions/cache@v2
       with:
         path: /home/runner/.conan
-        key: conan-cache-${{ hashFiles('conanfile.txt') }}
+        key: conan-cache-tmp-${{ hashFiles('conanfile.txt') }}
 
     - name: Install conan dependencies
       if: steps.cache-conan.outputs.cache-hit != 'true'
@@ -53,7 +53,7 @@ jobs:
       uses: actions/cache@v2
       with:
         path: ${{github.workspace}}/build
-        key: cmake-cache-${{ hashFiles('CMakeLists.txt') }}
+        key: cmake-cache-tmp-${{ hashFiles('CMakeLists.txt') }}
 
     - name: Configure CMake
       if: steps.cache-cmake.outputs.cache-hit != 'true'
