@@ -51,7 +51,7 @@ void Logger::log_dead(char actor_type, size_t actor_id) {
                        << ", " << actor_type << ", " << actor_id << "\n";
 }
 
-void Logger::log_destruction(unsigned percent) {
+void Logger::log_destruction(double percent) {
   Logger::get_stream() << "DESTRUCTION"
                        << ", " << percent << "%"
                        << "\n";
