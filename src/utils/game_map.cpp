@@ -25,10 +25,10 @@ Map Map::get(std::istream &stream) {
   std::vector<Defender> defenders;
   for (size_t i = 0; i < this->no_of_rows; i++) {
     for (size_t j = 0; j < this->no_of_cols; j++) {
-      if (this->_grid[i][j] > 0) {
+      if (this->_grid[j][i] > 0) {
         defenders.push_back(Defender::construct(
-            static_cast<DefenderType>(this->_grid[i][j]),
-            Position(static_cast<int>(i), static_cast<int>(j))));
+            static_cast<DefenderType>(this->_grid[j][i]),
+            Position(static_cast<int>(j), static_cast<int>(i))));
       }
     }
   }
