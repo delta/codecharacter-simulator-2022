@@ -5,9 +5,8 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_FLAGS "-fsanitize=address -Wall -Wextra -Wpedantic")
-set(CMAKE_CXX_FLAGS_DEBUG "-g")
-set(CMAKE_CXX_FLAGS_RELEASE "-O3")
+set(CMAKE_CXX_FLAGS_DEBUG "-g -fsanitize=address -Wall -Wextra -Wpedantic")
+set(CMAKE_CXX_FLAGS_RELEASE "-O3 -Wall -Wextra -Wpedantic ")
 
 # linter modules go here
 set(CMAKE_SCRIPTS_PATH "${CMAKE_SOURCE_DIR}/cmake")
@@ -44,6 +43,7 @@ if(NOT BUILD_PROJECT STREQUAL "no_tests")
 endif()
 
 if(BUILD_PROJECT STREQUAL "no_tests")
+  set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -static")
   add_subdirectory(src)
 else()
   add_subdirectory(src)

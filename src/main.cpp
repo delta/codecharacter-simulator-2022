@@ -36,10 +36,6 @@ int main() {
   auto map = Map::get(std::cin);
   auto defenders = map.spawn_defenders();
 
-  for (auto defender : defenders) {
-    std::cerr << defender.get_hp() << std::endl;
-  }
-
   auto initial_hp = std::accumulate(defenders.begin(), defenders.end(), 0,
                                     [](unsigned acc, const Defender &defender) {
                                       return acc + defender.get_hp();
@@ -62,21 +58,34 @@ int main() {
       spawn_positions.emplace_back(
           std::make_pair(Position(x, y), AttackerType(type_id)));
     }
-    game = game.simulate(spawn_positions);
+
+    //  Get all the manually to be set targets as input, we need attacker's id
+    //  and targetted defender id
+    std::unordered_map<Game::attacker_id, Game::defender_id> player_set_targets;
+    int no_of_player_set_targets = 0;
+    std::cin >> no_of_player_set_targets;
+    while ((no_of_player_set_targets--) > 0) {
+      Game::attacker_id att_id = 0;
+      Game::defender_id def_id = 0;
+      std::cin >> att_id >> def_id;
+      player_set_targets[att_id] = def_id;
+    }
+
+    game = game.simulate(player_set_targets, spawn_positions);
 
     auto active_attackers = game.get_attackers();
     std::cout << active_attackers.size() << "\n";
     std::ranges::for_each(active_attackers, [](const Attacker &attacker) {
-      std::cout << attacker.get_position().get_x() << " "
-                << attacker.get_position().get_y() << " "
+      std::cout << attacker.get_id() << " " << attacker.get_position().get_x()
+                << " " << attacker.get_position().get_y() << " "
                 << (int)attacker.get_type() << " " << attacker.get_hp() << "\n";
     });
 
     auto active_defenders = game.get_defenders();
     std::cout << active_defenders.size() << "\n";
     std::ranges::for_each(active_defenders, [](const Defender &defender) {
-      std::cout << defender.get_position().get_x() << " "
-                << defender.get_position().get_y() << " "
+      std::cout << defender.get_id() << " " << defender.get_position().get_x()
+                << " " << defender.get_position().get_y() << " "
                 << (int)defender.get_type() << " " << defender.get_hp() << "\n";
     });
 

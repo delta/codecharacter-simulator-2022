@@ -28,8 +28,8 @@ public:
            unsigned speed, unsigned attack_power, unsigned price,
            State state = State::SPAWNED)
       : Actor{_id_counter++, position, hp, range, attack_power, price},
-        _type(type), _state(state), _speed(speed),
-        _is_dest_set(false), _destination{0, 0} {}
+        _type(type), _state(state), _speed(speed), _is_dest_set(false),
+        _destination{0, 0}, _is_target_set_by_player{0}, _target_id{0} {}
 
   [[nodiscard]] static Attacker construct(AttackerType type, Position p);
 
@@ -48,6 +48,14 @@ public:
 
   [[nodiscard]] Position get_destination() const;
 
+  [[nodiscard]] bool is_target_set_by_player() const;
+
+  [[nodiscard]] size_t get_target_id() const;
+
+  void set_target(size_t defender_id);
+
+  void clear_target();
+
   void update_state() final;
 
   [[nodiscard]] AttackerType get_type() const;
@@ -63,4 +71,6 @@ private:
   unsigned _speed;
   bool _is_dest_set;
   Position _destination;
+  bool _is_target_set_by_player;
+  size_t _target_id;
 };
