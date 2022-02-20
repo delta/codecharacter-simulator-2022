@@ -45,7 +45,7 @@ public:
   [[nodiscard]] State get_state() const;
 
 private:
-  static inline size_t _id_counter;
+  static inline size_t _id_counter = 0;
   DefenderType _type;
   State _state;
 };

@@ -2,8 +2,8 @@
 #include "logger/logger.hpp"
 
 #include <algorithm>
-#include <unordered_set>
 #include <set>
+#include <unordered_set>
 
 using namespace std;
 
@@ -144,7 +144,8 @@ Game Game::simulate(
     // if the position was valid then only it should add the attacker. Meaning
     // the price was deducted for the attacker from the coins_left but it wasnt
     // added. This is the penalty for trying to spawn at invalid position
-    if (Position::is_valid_spawn_position(position.get_x(), position.get_y()) && !positions.contains(position)) {
+    if (Position::is_valid_spawn_position(position.get_x(), position.get_y()) &&
+        !positions.contains(position)) {
       positions.insert(position);
       attackers.push_back(Attacker::construct(attacker_type, position));
     }
