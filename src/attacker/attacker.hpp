@@ -65,7 +65,7 @@ public:
 private:
   void set_state(State s);
 
-  static inline size_t _id_counter;
+  static inline size_t _id_counter = 0;
   AttackerType _type;
   State _state;
   unsigned _speed;

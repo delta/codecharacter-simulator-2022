@@ -73,15 +73,16 @@ SCENARIO("Game::simulate") {
                                                    150  // price
                                                    )));
     std::vector<Defender> defenders_initial_state = game_map.spawn_defenders();
+
     Game game(std::vector<Attacker>{}, defenders_initial_state,
               1200 // number of coins
     );
     std::vector<std::pair<Position, AttackerType>> initial_spawn_positions{
-        {{0, 4}, AttackerType::X}, // cost 100
-        {{5, 0}, AttackerType::Y}, // cost 150
-        {{5, 0}, AttackerType::Y}, // cost 150
-        {{7, 0}, AttackerType::X}, // cost 100
-        {{9, 4}, AttackerType::Y}  // cost 100
+        {{4, 0}, AttackerType::X}, // cost 100
+        {{0, 4}, AttackerType::Y}, // cost 150
+        {{0, 5}, AttackerType::Y}, // cost 150
+        {{0, 7}, AttackerType::X}, // cost 100
+        {{4, 9}, AttackerType::Y}  // cost 100
     };                             // total cost 650
 
     std::vector<std::pair<Position, AttackerType>> second_turn_spawn_pos;
@@ -117,7 +118,7 @@ SCENARIO("Game::simulate") {
     size_t manually_attacking_attackers_id =
         first_turn_state.get_attackers()[4].get_id();
     size_t targetted_defenders_id =
-        find_actor_by_position(first_turn_state.get_defenders(), Position(6, 4))
+        find_actor_by_position(first_turn_state.get_defenders(), Position(4, 6))
             ->get_id();
     std::unordered_map<Game::attacker_id, Game::defender_id>
         second_turn_player_set_targets = {
@@ -136,18 +137,18 @@ SCENARIO("Game::simulate") {
     // FOURTH TURN
     const Attacker attacker_at_0_0 = *find_actor_by_position(
         third_turn_state.get_attackers(), Position(0, 0));
-    const Defender defender_at_5_4 = *find_actor_by_position(
-        third_turn_state.get_defenders(), Position(5, 4));
+    const Defender defender_at_4_5 = *find_actor_by_position(
+        third_turn_state.get_defenders(), Position(4, 5));
     std::unordered_map<Game::attacker_id, Game::defender_id>
         fourth_turn_player_set_targets = {
-            {attacker_at_0_0.get_id(), defender_at_5_4.get_id()}};
+            {attacker_at_0_0.get_id(), defender_at_4_5.get_id()}};
     Game fourth_turn_state = third_turn_state.simulate(
         fourth_turn_player_set_targets, fourth_turn_spawn_pos);
 
     // FIFTH TURN
     std::unordered_map<Game::attacker_id, Game::defender_id>
         fifth_turn_player_set_targets = {
-            {attacker_at_0_0.get_id(), defender_at_5_4.get_id()}};
+            {attacker_at_0_0.get_id(), defender_at_4_5.get_id()}};
     Game fifth_turn_state = fourth_turn_state.simulate(
         fourth_turn_player_set_targets, fourth_turn_spawn_pos);
 
@@ -165,11 +166,11 @@ SCENARIO("Game::simulate") {
 
         REQUIRE(first_turn_state.get_attackers() ==
                 std::vector<Attacker>{
-                    Attacker::construct(AttackerType::X, {0, 4}),
-                    Attacker::construct(AttackerType::Y, {5, 0}),
-                    Attacker::construct(AttackerType::Y, {5, 0}),
-                    Attacker::construct(AttackerType::X, {7, 0}),
-                    Attacker::construct(AttackerType::Y, {9, 4}),
+                    Attacker::construct(AttackerType::X, {4, 0}),
+                    Attacker::construct(AttackerType::Y, {0, 4}),
+                    Attacker::construct(AttackerType::Y, {0, 5}),
+                    Attacker::construct(AttackerType::X, {0, 7}),
+                    Attacker::construct(AttackerType::Y, {4, 9}),
                 });
       }
       THEN("All the custom target set requests are invalid, so no spawned "
@@ -192,8 +193,8 @@ SCENARIO("Game::simulate") {
        * {0,		 	0,0 ,0,0 ,0 ,0,0 ,0,0},
        * {0,		 	0,0 ,0,0 ,0 ,0,0 ,0,0},
        * {0,		 	0,0 ,0,dX,0 ,0,0 ,0,0},
-       * {0,		 	0,0 ,0,0 ,0 ,0,0 ,0,0},
-       * {(2*aY), 0,dY,0,dY,dX,0,0 ,0,0},
+       * {aY,		 	0,0 ,0,0 ,0 ,0,0 ,0,0},
+       * {aY,     0,dY,0,dY,dX,0,0 ,0,0},
        * {0,			0,0 ,0,dY,dX,0,0 ,0,0},
        * {aX		,	0,dX,0,0 ,0 ,0,dY,0,0},
        * {0,		 	0,0 ,0,0 ,0 ,0,0 ,0,0},
@@ -208,11 +209,11 @@ SCENARIO("Game::simulate") {
        */
 
       enum AttackerIndex {
-        A0 = 0, // Pos ->0,4
-        A1,     // Pos -> 5,0
-        A2,     // Pos -> 5,0
-        A3,     // Pos -> 7,0
-        A4      // Pos -> 9,4
+        A0 = 0, // Pos -> 4,0
+        A1,     // Pos -> 0,5
+        A2,     // Pos -> 0,5
+        A3,     // Pos -> 0,7
+        A4      // Pos -> 4,9
       };
 
       THEN("Same amount of game coin as in prev turn") {
@@ -241,7 +242,7 @@ SCENARIO("Game::simulate") {
 
         // Correctly set the destination
         REQUIRE(second_turn_state.get_attackers()[A4].get_destination() ==
-                Position(6, 4));
+                Position(4, 6));
       }
       THEN("Some Attackers are already in range and in attacking state") {
         REQUIRE(std::ranges::all_of(std::array{A1, A2, A3}, [&](size_t index) {
@@ -254,9 +255,9 @@ SCENARIO("Game::simulate") {
         const auto &defs = second_turn_state.get_defenders();
         REQUIRE(std::ranges::all_of(
             std::array{
-                *find_actor_by_position(defs, {5, 2}),
-                *find_actor_by_position(defs, {7, 2}),
-                *find_actor_by_position(defs, {6, 4}),
+                *find_actor_by_position(defs, {2, 5}),
+                *find_actor_by_position(defs, {2, 7}),
+                *find_actor_by_position(defs, {4, 6}),
             },
             [&](const Defender &defender) {
               return defender.get_state() == Defender::State::ATTACKING;
@@ -264,44 +265,32 @@ SCENARIO("Game::simulate") {
       }
 
       THEN("Attackers that were in range of Defenders lost some hp") {
-        // A1, A3, A4 were in range of defenders so they lost some hp
-        // A2 was in range as well but there were 2 attackers in range (for
-        // defender at (5,2)) so it chose the attacker
-        // which it found earlier and attacked that one, basically it chose
-        // the one with smaller id value.
-        //
-        // If more than one Actor is in range of opposition Actor, then the
-        // opposition Actor will choose the one which has smaller id. This
-        // happens due to the usage of min_element in the get closest
-        // functions which will return the first smallest element's iterator
-        // it finds. And the way our simulation works, The attacker vector
-        // will always be sorted by id field anyway hence implying that
-        // min_element will return the element with smallest id value if there
-        // are multiple min elements.
+        // A2,A3, A4 were in range of defenders.
 
         REQUIRE(second_turn_state.get_attackers()[A0].get_hp() ==
                 first_turn_state.get_attackers()[0].get_hp());
 
         REQUIRE(
-            second_turn_state.get_attackers()[A1].get_hp() ==
-            (first_turn_state.get_attackers()[A1].get_hp() -
-             find_actor_by_position(second_turn_state.get_defenders(), {5, 2})
+            second_turn_state.get_attackers()[A2].get_hp() ==
+            (first_turn_state.get_attackers()[A2].get_hp() -
+             find_actor_by_position(second_turn_state.get_defenders(), {2, 5})
                  ->get_attack_power()));
 
-        REQUIRE(second_turn_state.get_attackers()[A2].get_hp() ==
-                first_turn_state.get_attackers()[A2].get_hp());
+        // A1 is not at the minimum distance so it doesnt lose hp
+        REQUIRE(second_turn_state.get_attackers()[A1].get_hp() ==
+                first_turn_state.get_attackers()[A1].get_hp());
 
-        // A3 attacked by defender at 7,2
+        // A3 attacked by defender at 2,7
         REQUIRE(
             second_turn_state.get_attackers()[A3].get_hp() ==
             (first_turn_state.get_attackers()[A3].get_hp() -
-             find_actor_by_position(second_turn_state.get_defenders(), {7, 2})
+             find_actor_by_position(second_turn_state.get_defenders(), {2, 7})
                  ->get_attack_power()));
 
         REQUIRE(
             second_turn_state.get_attackers()[A4].get_hp() ==
             (first_turn_state.get_attackers()[A4].get_hp() -
-             find_actor_by_position(second_turn_state.get_defenders(), {6, 4})
+             find_actor_by_position(second_turn_state.get_defenders(), {4, 6})
                  ->get_attack_power()));
       };
 
@@ -311,13 +300,13 @@ SCENARIO("Game::simulate") {
         const auto &snd_atckrs = second_turn_state.get_attackers();
 
         // was attacked by A1 and A2
-        REQUIRE(find_actor_by_position(snd_defs, {5, 2})->get_hp() ==
-                (find_actor_by_position(fst_defs, {5, 2})->get_hp() -
+        REQUIRE(find_actor_by_position(snd_defs, {2, 5})->get_hp() ==
+                (find_actor_by_position(fst_defs, {2, 5})->get_hp() -
                  snd_atckrs[A1].get_attack_power() -
                  snd_atckrs[A2].get_attack_power()));
 
-        REQUIRE(find_actor_by_position(snd_defs, {7, 2})->get_hp() ==
-                (find_actor_by_position(fst_defs, {7, 2})->get_hp() -
+        REQUIRE(find_actor_by_position(snd_defs, {2, 7})->get_hp() ==
+                (find_actor_by_position(fst_defs, {2, 7})->get_hp() -
                  snd_atckrs[A3].get_attack_power()));
       }
     }
@@ -341,10 +330,10 @@ SCENARIO("Game::simulate") {
         REQUIRE(third_turn_state.get_defenders().size() ==
                 (second_turn_state.get_defenders().size() - 2));
         REQUIRE(
-            !find_actor_by_position(third_turn_state.get_defenders(), {5, 2})
+            !find_actor_by_position(third_turn_state.get_defenders(), {2, 5})
                  .has_value());
         REQUIRE(
-            !find_actor_by_position(third_turn_state.get_defenders(), {7, 2})
+            !find_actor_by_position(third_turn_state.get_defenders(), {2, 7})
                  .has_value());
       }
 
@@ -353,13 +342,13 @@ SCENARIO("Game::simulate") {
             second_turn_state.get_attackers().size();
         // Dead attackers:
         //
-        // - (5,0)[one with lower id value]
+        // - (0,5)
         //
-        // - [7,0] will die as well
+        // - [0,7] will die as well
         //
-        // - Attacker at (9,4)[initally it was in ( 9,4 ) but it would've moved
-        // toward its set target which would be the defender at (6,4).
-        // It will be in range of many defenders around the (6,4) area and it
+        // - Attacker at (4,9)[initally it was in (4,9) but it would've moved
+        // toward its set target which would be the defender at (4,6).
+        // It will be in range of many defenders around the (4,6) area and it
         // would die
         // ]
         auto dead_attackers = 3;
@@ -376,18 +365,18 @@ SCENARIO("Game::simulate") {
                       return a.get_id() == manually_attacking_attackers_id;
                     }) == 0);
 
-        // No of attackers at 5,0 is only 1 now as the other one would've died
+        // attacker at 5,0 is dead
         REQUIRE(
             std::ranges::count_if(
                 third_turn_state.get_attackers(), [](const Attacker &attacker) {
-                  return attacker.get_position() == Position{5, 0};
-                }) == 1);
+                  return attacker.get_position() == Position{0, 5};
+                }) == 0);
 
         // The attacker at 7,0 is also no more
         REQUIRE(std::ranges::count_if(third_turn_state.get_attackers(),
                                       [](const Attacker &attacker) {
                                         return attacker.get_position() ==
-                                               Position(7, 0);
+                                               Position(0, 7);
                                       }) == 0);
       }
     }
@@ -401,7 +390,7 @@ SCENARIO("Game::simulate") {
         REQUIRE(player_spawned_at_0_0_in_3rd_turn.is_target_set_by_player() ==
                 true);
         REQUIRE(player_spawned_at_0_0_in_3rd_turn.get_destination() ==
-                Position(5, 4));
+                Position(4, 5));
       }
     }
 
@@ -414,7 +403,7 @@ SCENARIO("Game::simulate") {
         REQUIRE(player_spawned_at_0_0_in_3rd_turn.is_target_set_by_player() ==
                 true);
         REQUIRE(player_spawned_at_0_0_in_3rd_turn.get_destination() ==
-                Position(5, 4));
+                Position(4, 5));
       }
     }
   }
