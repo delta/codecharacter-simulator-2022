@@ -55,7 +55,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ${{github.workspace}}/build
-          key: cmake-cache-${{ hashFiles('CMakeLists.txt') }}
+          key: cmake-cache-tmp-${{ hashFiles('CMakeLists.txt') }}
 
       - name: Configure CMake
         if: steps.cache-cmake.outputs.cache-hit != 'true'
