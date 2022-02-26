@@ -56,7 +56,7 @@ jobs:
 
       - name: Configure CMake
         if: steps.cache-cmake.outputs.cache-hit != 'true'
-        run: cmake -G Ninja -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+        run: cmake -G Ninja -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DBUILD_PROJECT="no_tests" 
 
       - name: Build
         working-directory: ${{github.workspace}}/build
@@ -79,7 +79,7 @@ jobs:
         id: meta-simulator
         uses: docker/metadata-action@v3
         with:
-          images: ${{ env.REGISTRY }}/delta/codecharacter-simulator
+          images: ghcr.io/delta/codecharacter-simulator
       - name: Build and push simulator image
         uses: docker/build-push-action@v2
         with:
