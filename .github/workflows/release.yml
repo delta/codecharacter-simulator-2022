@@ -42,7 +42,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: /home/runner/.conan
-          key: conan-cache-${{ hashFiles('conanfile.txt') }}
+          key: conan-cache-${{ hashFiles('conanfile.txt') }}-${{ env.BUILD_PROJECT }}
 
       - name: Install conan dependencies
         if: steps.cache-conan.outputs.cache-hit != 'true'
