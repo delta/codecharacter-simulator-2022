@@ -7,6 +7,7 @@ on:
 
 env:
   BUILD_TYPE: Release
+  BUILD_PROJECT: no_tests
   CC: gcc-11
   CXX: g++-11
 
@@ -41,7 +42,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: /home/runner/.conan
-          key: conan-cache-${{ hashFiles('conanfile.txt') }}
+          key: conan-cache-${{ hashFiles('conanfile.txt') }}-${{ env.BUILD_PROJECT }}
 
       - name: Install conan dependencies
         if: steps.cache-conan.outputs.cache-hit != 'true'
@@ -52,11 +53,11 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ${{github.workspace}}/build
-          key: cmake-cache-tmp-${{ hashFiles('CMakeLists.txt') }}
+          key: cmake-cache-tmp-${{ hashFiles('CMakeLists.txt') }}-${{ env.BUILD_PROJECT }}
 
       - name: Configure CMake
         if: steps.cache-cmake.outputs.cache-hit != 'true'
-        run: cmake -G Ninja -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DBUILD_PROJECT="no_tests" 
+        run: cmake -G Ninja -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DBUILD_PROJECT=${{env.BUILD_PROJECT}}
 
       - name: Build
         working-directory: ${{github.workspace}}/build
