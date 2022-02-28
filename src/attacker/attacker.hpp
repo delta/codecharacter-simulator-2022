@@ -11,10 +11,7 @@
 
 class Defender;
 
-enum class AttackerType {
-  X = 1,
-  Y,
-};
+enum class AttackerType { A1 = 1, A2, A3, A4, A5 };
 
 class Attacker : public Actor {
 

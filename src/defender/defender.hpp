@@ -10,8 +10,12 @@
 #include <vector>
 
 enum class DefenderType {
-  X = 1,
-  Y,
+  D1 = 1,
+  D2,
+  D3,
+  D4,
+  D5
+
 };
 
 class Attacker;
