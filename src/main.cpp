@@ -8,6 +8,7 @@
 #include "utils/game_map.hpp"
 
 int main() {
+  std::cout.setf(std::ios::unitbuf);
   unsigned turns, coins;
   std::cin >> turns >> coins;
 
