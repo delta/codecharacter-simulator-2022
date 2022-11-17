@@ -21,3 +21,8 @@
     For example to generate release build, run
     `cmake -G Ninja -DCMAKE_BUILD_TYPE=Release ..`
 -   `ninja`
+
+### Building inside Docker
+
+-   `make gcc-docker`
+-   Other steps are same as above
