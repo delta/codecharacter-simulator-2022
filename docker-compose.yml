@@ -1,0 +1,10 @@
+version: '3'
+services:
+  simulator: 
+    build:
+      context: .
+      dockerfile: cc-sim.Dockerfile
+    volumes:
+      - .:/simulator
+      - /etc/passwd:/etc/passwd:ro
+      - /etc/group:/etc/group:ro
