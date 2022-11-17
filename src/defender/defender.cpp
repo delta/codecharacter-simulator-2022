@@ -2,6 +2,7 @@
 #include "attacker/attacker.hpp"
 #include "logger/logger.hpp"
 
+#include <algorithm>
 #include <optional>
 
 Defender Defender::construct(DefenderType type, Position p) {
