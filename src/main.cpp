@@ -1,11 +1,11 @@
-#include <algorithm>
-#include <iostream>
-#include <numeric>
-
 #include "defender/defender.hpp"
 #include "game/game.hpp"
 #include "logger/logger.hpp"
 #include "utils/game_map.hpp"
+
+#include <algorithm>
+#include <iostream>
+#include <numeric>
 
 int main() {
   std::cout.setf(std::ios::unitbuf);

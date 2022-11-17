@@ -1,8 +1,8 @@
 #include "utils/position.hpp"
-
-#include <cmath>
-
 #include "utils/game_map.hpp"
+
+#include <algorithm>
+#include <cmath>
 
 Position::Position(int x, int y)
     : _x(std::clamp(x, 0, (int)Map::no_of_cols)),

@@ -1,10 +1,10 @@
 #pragma once
 
-#include <sstream>
-#include <vector>
-
 #include "attacker/attacker.hpp"
 #include "defender/defender.hpp"
+
+#include <sstream>
+#include <vector>
 
 /*
  * A singleton class that handles logging
