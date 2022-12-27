@@ -9,14 +9,7 @@
 #include <unordered_map>
 #include <vector>
 
-enum class DefenderType {
-  D1 = 1,
-  D2,
-  D3,
-  D4,
-  D5
-
-};
+enum class DefenderType { D1 = 1, D2, D3, D4, D5 };
 
 class Attacker;
 
@@ -45,6 +38,8 @@ public:
   void set_state(State s);
 
   [[nodiscard]] DefenderType get_type() const;
+
+  bool is_aerial_type() const;
 
   [[nodiscard]] State get_state() const;
 

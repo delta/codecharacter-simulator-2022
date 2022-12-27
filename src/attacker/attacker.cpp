@@ -15,6 +15,16 @@ Attacker Attacker::construct(AttackerType type, Position p) {
           attr.price, Attacker::State::SPAWNED};
 }
 
+AttackerType Attacker::get_type() const { return this->_type; }
+
+bool Attacker::is_aerial_type() const {
+  auto type = this->get_type();
+  if (((int)type) == 5) {
+    return true;
+  }
+  return false;
+}
+
 bool Attacker::is_destination_set() const { return this->_is_dest_set; }
 
 void Attacker::clear_destination() { this->_is_dest_set = false; }
@@ -58,13 +68,51 @@ void Attacker::update_state() {
   if (defenders.empty()) {
     return std::nullopt;
   }
-  auto nearest_defender = std::min_element(
-      defenders.begin(), defenders.end(),
-      [this](const Defender &a, const Defender &b) {
-        return this->get_position().distance_to(a.get_position()) <
-               this->get_position().distance_to(b.get_position());
-      });
-  return std::distance(defenders.begin(), nearest_defender);
+
+  // if attacker is aerial type any defender is fine so we just get the nearest
+  // one
+  if (this->is_aerial_type()) {
+    auto nearest_defender = std::min_element(
+        defenders.begin(), defenders.end(),
+        [this](const Defender &a, const Defender &b) {
+          return this->get_position().distance_to(a.get_position()) <
+                 this->get_position().distance_to(b.get_position());
+        });
+    return std::distance(defenders.begin(), nearest_defender);
+  }
+
+  // if attacker is not aerial type we loop through all defenders
+  else {
+    auto defender = defenders.begin();
+    bool ground_defender_exists = false;
+    auto nearest_defender = defender;
+    while (defender != defenders.end()) {
+      if (!defender->is_aerial_type()) {
+        if (ground_defender_exists) {
+          if ((this->get_position().distance_to(defender->get_position())) <
+              (this->get_position().distance_to(
+                  nearest_defender->get_position()))) {
+            nearest_defender = defender;
+          }
+        } else {
+          ground_defender_exists = true;
+          nearest_defender = defender;
+        }
+      }
+      defender++;
+    }
+
+    // if some ground defender exists we return the nearest one
+    if (ground_defender_exists) {
+      return std::distance(defenders.begin(), nearest_defender);
+    }
+
+    // if no ground defender exists then the attacker cant attack anyone so
+    // return null
+    else {
+      return std::nullopt;
+    }
+  }
 }
 
 void Attacker::move(Position position) {
@@ -100,7 +148,5 @@ void Attacker::attack(Actor &opponent) const {
 }
 
 void Attacker::set_state(State s) { this->_state = s; }
-
-AttackerType Attacker::get_type() const { return this->_type; }
 
 Attacker::State Attacker::get_state() const { return this->_state; }

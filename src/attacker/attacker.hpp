@@ -53,9 +53,11 @@ public:
 
   void clear_target();
 
-  void update_state() final;
-
   [[nodiscard]] AttackerType get_type() const;
+
+  bool is_aerial_type() const;
+
+  void update_state() final;
 
   [[nodiscard]] State get_state() const;
 
