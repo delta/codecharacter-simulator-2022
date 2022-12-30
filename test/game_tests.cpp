@@ -34,8 +34,8 @@ SCENARIO("Game::simulate") {
         {0, 0, 0, 0, 1, 0, 0, 0, 0, 0},
         {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
         {0, 0, 2, 0, 2, 1, 0, 0, 0, 0},
-        {0, 0, 0, 0, 2, 1, 0, 0, 0, 0},
-        {0, 0, 1, 0, 0, 0, 0, 2, 0, 0},
+        {0, 0, 0, 0, 5, 1, 0, 0, 0, 0},
+        {0, 0, 1, 0, 0, 0, 0, 5, 0, 0},
         {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
         {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
     });
@@ -50,6 +50,13 @@ SCENARIO("Game::simulate") {
                                                     )));
     Defender::attribute_dictionary.insert(
         std::make_pair(DefenderType::D2, Attributes(200, // hp
+                                                    3,   // range
+                                                    100, // attack_power
+                                                    0,   // speed
+                                                    0    // price
+                                                    )));
+    Defender::attribute_dictionary.insert(
+        std::make_pair(DefenderType::D5, Attributes(200, // hp
                                                     3,   // range
                                                     100, // attack_power
                                                     0,   // speed
@@ -72,6 +79,13 @@ SCENARIO("Game::simulate") {
                                                     3,   // speed
                                                     150  // price
                                                     )));
+    Attacker::attribute_dictionary.insert(
+        std::make_pair(AttackerType::A5, Attributes(150, // hp
+                                                    2,   // range
+                                                    75,  // attack_power
+                                                    3,   // speed
+                                                    150  // price
+                                                    )));
     std::vector<Defender> defenders_initial_state = game_map.spawn_defenders();
 
     Game game(std::vector<Attacker>{}, defenders_initial_state,
@@ -79,16 +93,16 @@ SCENARIO("Game::simulate") {
     );
     std::vector<std::pair<Position, AttackerType>> initial_spawn_positions{
         {{4, 0}, AttackerType::A1}, // cost 100
-        {{0, 4}, AttackerType::A2}, // cost 150
+        {{0, 4}, AttackerType::A5}, // cost 150 //AERIAL
         {{0, 5}, AttackerType::A2}, // cost 150
         {{0, 7}, AttackerType::A1}, // cost 100
-        {{4, 9}, AttackerType::A2}  // cost 100
+        {{4, 9}, AttackerType::A2}  // cost 150
     };                              // total cost 650
 
     std::vector<std::pair<Position, AttackerType>> second_turn_spawn_pos;
 
     std::vector<std::pair<Position, AttackerType>> third_turn_spawn_pos = {
-        {{9, 9}, AttackerType::A2},
+        {{9, 9}, AttackerType::A5}, // AERIAL
         {{3, 3}, AttackerType::A2}, // this is invalid postion, so i'll be fined
                                     // only but the attacker wont be spawned,
                                     // but money is gone
@@ -167,7 +181,7 @@ SCENARIO("Game::simulate") {
         REQUIRE(first_turn_state.get_attackers() ==
                 std::vector<Attacker>{
                     Attacker::construct(AttackerType::A1, {4, 0}),
-                    Attacker::construct(AttackerType::A2, {0, 4}),
+                    Attacker::construct(AttackerType::A5, {0, 4}),
                     Attacker::construct(AttackerType::A2, {0, 5}),
                     Attacker::construct(AttackerType::A1, {0, 7}),
                     Attacker::construct(AttackerType::A2, {4, 9}),
@@ -193,18 +207,20 @@ SCENARIO("Game::simulate") {
        * {0,		 	0,0 ,0,0 ,0 ,0,0 ,0,0},
        * {0,		 	0,0 ,0,0 ,0 ,0,0 ,0,0},
        * {0,		 	0,0 ,0,dX,0 ,0,0 ,0,0},
-       * {aY,		 	0,0 ,0,0 ,0 ,0,0 ,0,0},
+       * {a5,		 	0,0 ,0,0 ,0 ,0,0 ,0,0},
        * {aY,     0,dY,0,dY,dX,0,0 ,0,0},
        * {0,			0,0 ,0,dY,dX,0,0 ,0,0},
        * {aX		,	0,dX,0,0 ,0 ,0,dY,0,0},
        * {0,		 	0,0 ,0,0 ,0 ,0,0 ,0,0},
-       * {0,		 	0,0 ,0,aY,0 ,0,0 ,0,0},
+       * {0,		 	0,0 ,0,a5,0 ,0,0 ,0,0},
        *
        * aX has range 2 ,speed 2,attack_power 50,hp 100
        * aY has range 2 ,speed 3,attack_power 75,hp 150
+       * a5 has range 2 ,speed 3,attack_power 75,hp 150 //aerial
        *
        * dX has range 2, attack_power 50, hp 100
        * dY has range 3, attack_power 100, hp 200
+       * d5 has range 3, attack_power 100, hp 200 //aerial
        *
        */
 
@@ -321,7 +337,7 @@ SCENARIO("Game::simulate") {
         REQUIRE(std::array{third_turn_state.get_attackers().end()[-2],
                            third_turn_state.get_attackers().end()[-1]} ==
                 std::array{
-                    Attacker::construct(AttackerType::A2, {9, 9}),
+                    Attacker::construct(AttackerType::A5, {9, 9}),
                     Attacker::construct(AttackerType::A2, {0, 0}),
                 });
       }

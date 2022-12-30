@@ -38,6 +38,9 @@ std::optional<size_t> Defender::get_nearest_attacker_index(
     return std::nullopt;
   }
 
+  // If it is Aerial Type we find both the nearest ground and aerial attacker
+  // and return the nearest aerial attacker(if it exists and in range)
+  //
   if (this->is_aerial_type()) {
     auto attacker = attackers.begin();
     bool aerial_attacker_exists = false;
@@ -70,13 +73,28 @@ std::optional<size_t> Defender::get_nearest_attacker_index(
       }
       attacker++;
     }
-    if (this->is_in_range(*nearest_aerial_attacker)) {
-      return std::distance(attackers.begin(), nearest_aerial_attacker);
-    } else {
+    if (aerial_attacker_exists) {
+      // if the nearest aerial attacker is in range then we return it
+      if (this->is_in_range(*nearest_aerial_attacker)) {
+        return std::distance(attackers.begin(), nearest_aerial_attacker);
+      }
+      // If aerial attacker exists but not in range, then we return the nearest
+      // ground attacker
+      else if (ground_attacker_exists) {
+        return std::distance(attackers.begin(), nearest_ground_attacker);
+      }
+      // if no ground attacker exists then we return the nearest aerial attacker
+      else {
+        return std::distance(attackers.begin(), nearest_aerial_attacker);
+      }
+    }
+    // if no aerial attacker exists then we return the nearest ground attacker
+    else {
       return std::distance(attackers.begin(), nearest_ground_attacker);
     }
   }
 
+  // If it is Ground Type we find the nearest ground attacker and return it
   else {
     auto attacker = attackers.begin();
     bool ground_attacker_exists = false;
@@ -103,11 +121,13 @@ std::optional<size_t> Defender::get_nearest_attacker_index(
     }
 
     // if no ground attacker exists then the defender cant attack anyone so
-    // return null
+    // return nullopt
     else {
       return std::nullopt;
     }
   }
+
+  return std::nullopt;
 }
 
 void Defender::set_state(State s) { this->_state = s; }

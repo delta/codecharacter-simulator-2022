@@ -5,8 +5,8 @@
 
 SCENARIO("Attacker::move") {
   GIVEN("a straight horizontal trajectory") {
-    int range = 4;
-    int speed = 2;
+    int range = 2;
+    int speed = 4;
     Position initial_position(0, 0);
     Attacker::attribute_dictionary.clear();
     Attacker::attribute_dictionary.insert(
@@ -26,7 +26,8 @@ SCENARIO("Attacker::move") {
     }
 
     WHEN("distance is less than range + speed") {
-      int distance = range + speed - 1;
+      int shorterBy = 1;
+      int distance = range + speed - shorterBy;
       Position target = {distance, 0};
       attacker.move(target);
 
@@ -49,8 +50,8 @@ SCENARIO("Attacker::move") {
   }
 
   GIVEN("a straight vertical trajectory") {
-    int range = 4;
-    int speed = 2;
+    int range = 2;
+    int speed = 4;
     Position initial_position(0, 0);
     Attacker::attribute_dictionary.clear();
     Attacker::attribute_dictionary.insert(
@@ -139,6 +140,9 @@ SCENARIO("Attacker::move") {
   }
 }
 
+// FOR Non Aerial Attackers it can attack only Ground defenders that are in
+// range
+
 SCENARIO("Attacker::get_nearest_defender_index") {
   GIVEN("a list of defenders of varying length") {
     Attacker::attribute_dictionary.clear();
@@ -157,7 +161,7 @@ SCENARIO("Attacker::get_nearest_defender_index") {
       }
     }
 
-    WHEN("list has defenders") {
+    WHEN("list has only ground defenders") {
       std::vector<Defender> defenders{
           Defender::construct(DefenderType::D1, {5, 0}),
           Defender::construct(DefenderType::D1, {3, 0}),
@@ -171,6 +175,201 @@ SCENARIO("Attacker::get_nearest_defender_index") {
       THEN("nearest defender is the closest defender") {
         REQUIRE(nearest_defender_index.has_value() == true);
         REQUIRE(nearest_defender_index.value() == 2);
+      }
+    }
+
+    WHEN("list has both aerial and ground defenders") {
+      std::vector<Defender> defenders{
+          Defender::construct(DefenderType::D1, {5, 0}),
+          Defender::construct(DefenderType::D1, {9, 0}),
+          Defender::construct(DefenderType::D5, {3, 0}),
+          Defender::construct(DefenderType::D5, {7, 0}),
+          Defender::construct(DefenderType::D1, {4, 0}),
+          Defender::construct(DefenderType::D5, {1, 0}),
+          Defender::construct(DefenderType::D1, {6, 0}),
+          Defender::construct(DefenderType::D1, {2, 0}),
+      };
+
+      auto nearest_defender_index =
+          attacker.get_nearest_defender_index(defenders);
+
+      THEN("nearest defender is the closest ground defender") {
+        REQUIRE(nearest_defender_index.has_value() == true);
+        REQUIRE(nearest_defender_index.value() == 7);
+      }
+    }
+
+    WHEN("list has only aerial defenders") {
+      std::vector<Defender> defenders{
+          Defender::construct(DefenderType::D5, {5, 0}),
+          Defender::construct(DefenderType::D5, {3, 0}),
+          Defender::construct(DefenderType::D5, {1, 0}),
+          Defender::construct(DefenderType::D5, {7, 0}),
+      };
+
+      auto nearest_defender_index =
+          attacker.get_nearest_defender_index(defenders);
+      THEN("nearest defender does not exist") {
+        REQUIRE(nearest_defender_index.has_value() == false);
+      }
+    }
+
+    WHEN("list has only ground defenders with same distance") {
+      std::vector<Defender> defenders{
+          Defender::construct(DefenderType::D1, {5, 0}),
+          Defender::construct(DefenderType::D1, {3, 0}),
+          Defender::construct(DefenderType::D1, {3, 0}),
+          Defender::construct(DefenderType::D1, {7, 0}),
+      };
+
+      auto nearest_defender_index =
+          attacker.get_nearest_defender_index(defenders);
+
+      THEN("nearest defender is the first defender with that distance") {
+        REQUIRE(nearest_defender_index.has_value() == true);
+        REQUIRE(nearest_defender_index.value() == 1);
+      }
+    }
+
+    WHEN("list has both aerial and ground defenders with same distance") {
+      std::vector<Defender> defenders{
+          Defender::construct(DefenderType::D1, {5, 0}),
+          Defender::construct(DefenderType::D5, {3, 0}),
+          Defender::construct(DefenderType::D1, {3, 0}),
+          Defender::construct(DefenderType::D5, {7, 0})};
+
+      auto nearest_defender_index =
+          attacker.get_nearest_defender_index(defenders);
+
+      THEN("nearest ground defender is taken first") {
+        REQUIRE(nearest_defender_index.has_value() == true);
+        REQUIRE(nearest_defender_index.value() == 2);
+      }
+    }
+  }
+}
+
+// FOR Aerial Attackers it can attack both Ground and Aerial defenders that are
+// in range
+
+SCENARIO("Attacker(Aerial)::get_nearest_defender_index") {
+  GIVEN("a list of defenders of varying length") {
+    Attacker::attribute_dictionary.clear();
+    Attacker::attribute_dictionary.insert(
+        std::make_pair(AttackerType::A5, Attributes(0, 0, 0, 0, 0)));
+    Attacker attacker = Attacker::construct(AttackerType::A5, {0, 0});
+
+    WHEN("the given list is empty") {
+      std::vector<Defender> defenders;
+
+      auto nearest_defender_index =
+          attacker.get_nearest_defender_index(defenders);
+
+      THEN("nearest defender does not exist") {
+        REQUIRE(nearest_defender_index.has_value() == false);
+      }
+    }
+
+    WHEN("list has only ground defenders") {
+      std::vector<Defender> defenders{
+          Defender::construct(DefenderType::D1, {5, 0}),
+          Defender::construct(DefenderType::D1, {3, 0}),
+          Defender::construct(DefenderType::D1, {1, 0}),
+          Defender::construct(DefenderType::D1, {7, 0}),
+      };
+
+      auto nearest_defender_index =
+          attacker.get_nearest_defender_index(defenders);
+
+      THEN("nearest defender is the closest defender") {
+        REQUIRE(nearest_defender_index.has_value() == true);
+        REQUIRE(nearest_defender_index.value() == 2);
+      }
+    }
+
+    WHEN("list has both aerial and ground defenders") {
+      std::vector<Defender> defenders{
+          Defender::construct(DefenderType::D1, {5, 0}),
+          Defender::construct(DefenderType::D1, {9, 0}),
+          Defender::construct(DefenderType::D5, {3, 0}),
+          Defender::construct(DefenderType::D5, {7, 0}),
+          Defender::construct(DefenderType::D1, {4, 0}),
+          Defender::construct(DefenderType::D5, {2, 0}),
+          Defender::construct(DefenderType::D1, {6, 0}),
+          Defender::construct(DefenderType::D5, {1, 0}),
+      };
+
+      auto nearest_defender_index =
+          attacker.get_nearest_defender_index(defenders);
+
+      THEN("nearest defender is the closest defender") {
+        REQUIRE(nearest_defender_index.has_value() == true);
+        REQUIRE(nearest_defender_index.value() == 7);
+      }
+    }
+
+    WHEN("list has only aerial defenders") {
+      std::vector<Defender> defenders{
+          Defender::construct(DefenderType::D5, {5, 0}),
+          Defender::construct(DefenderType::D5, {3, 0}),
+          Defender::construct(DefenderType::D5, {1, 0}),
+          Defender::construct(DefenderType::D5, {7, 0}),
+      };
+
+      auto nearest_defender_index =
+          attacker.get_nearest_defender_index(defenders);
+
+      THEN("nearest defender is taken first") {
+        REQUIRE(nearest_defender_index.value() == 2);
+      }
+    }
+
+    WHEN("list has only ground defenders with same distance") {
+      std::vector<Defender> defenders{
+          Defender::construct(DefenderType::D1, {5, 0}),
+          Defender::construct(DefenderType::D1, {3, 0}),
+          Defender::construct(DefenderType::D1, {3, 0}),
+          Defender::construct(DefenderType::D1, {7, 0}),
+      };
+
+      auto nearest_defender_index =
+          attacker.get_nearest_defender_index(defenders);
+
+      THEN("nearest defender is the first defender taken") {
+        REQUIRE(nearest_defender_index.has_value() == true);
+        REQUIRE(nearest_defender_index.value() == 1);
+      }
+    }
+
+    WHEN("list has only aerial defenders with same distance") {
+      std::vector<Defender> defenders{
+          Defender::construct(DefenderType::D5, {5, 0}),
+          Defender::construct(DefenderType::D5, {3, 0}),
+          Defender::construct(DefenderType::D5, {3, 0}),
+          Defender::construct(DefenderType::D5, {7, 0}),
+      };
+
+      auto nearest_defender_index =
+          attacker.get_nearest_defender_index(defenders);
+
+      THEN("nearest first defender is taken") {
+        REQUIRE(nearest_defender_index.has_value() == 1);
+      }
+    }
+
+    WHEN("list has both aerial and ground defenders with same distance") {
+      std::vector<Defender> defenders{
+          Defender::construct(DefenderType::D1, {5, 0}),
+          Defender::construct(DefenderType::D5, {3, 0}),
+          Defender::construct(DefenderType::D1, {3, 0}),
+          Defender::construct(DefenderType::D5, {7, 0})};
+
+      auto nearest_defender_index =
+          attacker.get_nearest_defender_index(defenders);
+
+      THEN("nearest defender is taken first") {
+        REQUIRE(nearest_defender_index.has_value() == true);
+        REQUIRE(nearest_defender_index.value() == 1);
       }
     }
   }
