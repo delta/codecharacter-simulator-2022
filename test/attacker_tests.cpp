@@ -9,8 +9,8 @@ SCENARIO("Attacker::move") {
     int speed = 4;
     Position initial_position(0, 0);
     Attacker::attribute_dictionary.clear();
-    Attacker::attribute_dictionary.insert(
-        std::make_pair(AttackerType::A1, Attributes(0, range, 0, speed, 0)));
+    Attacker::attribute_dictionary.insert(std::make_pair(
+        AttackerType::A1, Attributes(0, range, 0, speed, 0, false)));
     Attacker attacker = Attacker::construct(AttackerType::A1, initial_position);
 
     WHEN("distance is more than range + speed") {
@@ -54,8 +54,8 @@ SCENARIO("Attacker::move") {
     int speed = 4;
     Position initial_position(0, 0);
     Attacker::attribute_dictionary.clear();
-    Attacker::attribute_dictionary.insert(
-        std::make_pair(AttackerType::A1, Attributes(0, range, 0, speed, 0)));
+    Attacker::attribute_dictionary.insert(std::make_pair(
+        AttackerType::A1, Attributes(0, range, 0, speed, 0, false)));
     Attacker attacker = Attacker::construct(AttackerType::A1, initial_position);
 
     WHEN("distance is more than range + speed") {
@@ -98,8 +98,8 @@ SCENARIO("Attacker::move") {
     int speed = 10;
     Position initial_position(0, 0);
     Attacker::attribute_dictionary.clear();
-    Attacker::attribute_dictionary.insert(
-        std::make_pair(AttackerType::A1, Attributes(0, range, 0, speed, 0)));
+    Attacker::attribute_dictionary.insert(std::make_pair(
+        AttackerType::A1, Attributes(0, range, 0, speed, 0, false)));
     Attacker attacker = Attacker::construct(AttackerType::A1, initial_position);
 
     WHEN("distance is more than range + speed") {
@@ -147,7 +147,12 @@ SCENARIO("Attacker::get_nearest_defender_index") {
   GIVEN("a list of defenders of varying length") {
     Attacker::attribute_dictionary.clear();
     Attacker::attribute_dictionary.insert(
-        std::make_pair(AttackerType::A1, Attributes(0, 0, 0, 0, 0)));
+        std::make_pair(AttackerType::A1, Attributes(0, 0, 0, 0, 0, false)));
+    Defender::attribute_dictionary.clear();
+    Defender::attribute_dictionary.insert(
+        std::make_pair(DefenderType::D1, Attributes(0, 0, 0, 0, 0, false)));
+    Defender::attribute_dictionary.insert(
+        std::make_pair(DefenderType::D5, Attributes(0, 0, 0, 0, 0, true)));
     Attacker attacker = Attacker::construct(AttackerType::A1, {0, 0});
 
     WHEN("the given list is empty") {
@@ -256,8 +261,13 @@ SCENARIO("Attacker(Aerial)::get_nearest_defender_index") {
   GIVEN("a list of defenders of varying length") {
     Attacker::attribute_dictionary.clear();
     Attacker::attribute_dictionary.insert(
-        std::make_pair(AttackerType::A5, Attributes(0, 0, 0, 0, 0)));
+        std::make_pair(AttackerType::A5, Attributes(0, 0, 0, 0, 0, true)));
     Attacker attacker = Attacker::construct(AttackerType::A5, {0, 0});
+    Defender::attribute_dictionary.clear();
+    Defender::attribute_dictionary.insert(
+        std::make_pair(DefenderType::D1, Attributes(0, 0, 0, 0, 0, false)));
+    Defender::attribute_dictionary.insert(
+        std::make_pair(DefenderType::D5, Attributes(0, 0, 0, 0, 0, true)));
 
     WHEN("the given list is empty") {
       std::vector<Defender> defenders;

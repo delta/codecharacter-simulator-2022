@@ -8,7 +8,7 @@
 class Actor {
 public:
   Actor(size_t id, Position position, unsigned hp, unsigned range,
-        unsigned attack_power, unsigned price);
+        unsigned attack_power, unsigned price, bool is_aerial);
 
   virtual ~Actor() = default;
 
@@ -37,6 +37,8 @@ public:
 
   [[nodiscard]] Position get_position() const;
 
+  bool is_aerial_type() const;
+
   virtual void update_state() = 0;
 
 protected:
@@ -48,4 +50,5 @@ private:
   unsigned _range;
   unsigned _attack_power;
   unsigned _price;
+  bool _is_aerial;
 };

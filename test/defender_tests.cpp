@@ -7,8 +7,13 @@ SCENARIO("Defender::get_nearest_attacker_index") {
   GIVEN("a list of attackers of varying length") {
     Defender::attribute_dictionary.clear();
     Defender::attribute_dictionary.insert(
-        std::make_pair(DefenderType::D1, Attributes(0, 0, 0, 0, 0)));
+        std::make_pair(DefenderType::D1, Attributes(0, 0, 0, 0, 0, false)));
     Defender defender = Defender::construct(DefenderType::D1, {0, 0});
+    Attacker::attribute_dictionary.clear();
+    Attacker::attribute_dictionary.insert(
+        std::make_pair(AttackerType::A1, Attributes(0, 0, 0, 0, 0, false)));
+    Attacker::attribute_dictionary.insert(
+        std::make_pair(AttackerType::A5, Attributes(0, 0, 0, 0, 0, true)));
 
     WHEN("the given list is empty") {
       std::vector<Attacker> attackers;
@@ -44,8 +49,13 @@ SCENARIO("Defender(Non Aerial)::get_nearest_attacker_index") {
   GIVEN("a list of attackers of varying length") {
     Defender::attribute_dictionary.clear();
     Defender::attribute_dictionary.insert(
-        std::make_pair(DefenderType::D1, Attributes(0, 0, 0, 0, 0)));
+        std::make_pair(DefenderType::D1, Attributes(0, 0, 0, 0, 0, false)));
     Defender defender = Defender::construct(DefenderType::D1, {0, 0});
+    Attacker::attribute_dictionary.clear();
+    Attacker::attribute_dictionary.insert(
+        std::make_pair(AttackerType::A1, Attributes(0, 0, 0, 0, 0, false)));
+    Attacker::attribute_dictionary.insert(
+        std::make_pair(AttackerType::A5, Attributes(0, 0, 0, 0, 0, true)));
 
     WHEN("the given list is empty") {
       std::vector<Attacker> attackers;
@@ -132,8 +142,13 @@ SCENARIO("Defender(Aerial)::get_nearest_attacker_index") {
   GIVEN("a list of attackers of varying length") {
     Defender::attribute_dictionary.clear();
     Defender::attribute_dictionary.insert(
-        std::make_pair(DefenderType::D5, Attributes(0, 7, 0, 0, 0)));
+        std::make_pair(DefenderType::D5, Attributes(0, 7, 0, 0, 0, true)));
     Defender defender = Defender::construct(DefenderType::D5, {0, 0});
+    Attacker::attribute_dictionary.clear();
+    Attacker::attribute_dictionary.insert(
+        std::make_pair(AttackerType::A1, Attributes(0, 0, 0, 0, 0, false)));
+    Attacker::attribute_dictionary.insert(
+        std::make_pair(AttackerType::A5, Attributes(0, 0, 0, 0, 0, true)));
 
     WHEN("the given list is empty") {
       std::vector<Attacker> attackers;
@@ -212,7 +227,7 @@ SCENARIO("Defender(Aerial)::get_nearest_attacker_index") {
       auto nearest_attacker_index =
           defender.get_nearest_attacker_index(attackers);
 
-      THEN("nearest attacker is the closest ground attacker") {
+      THEN("nearest attacker is the closest attacker (aerial or ground)") {
         REQUIRE(nearest_attacker_index.has_value() == true);
         REQUIRE(nearest_attacker_index.value() == 1);
       }
@@ -250,10 +265,9 @@ SCENARIO("Defender(Aerial)::get_nearest_attacker_index") {
       auto nearest_attacker_index =
           defender.get_nearest_attacker_index(attackers);
 
-      THEN("nearest attacker is the closest ground attacker that comes first "
-           "in the list") {
+      THEN("nearest attacker is the closest attacker (aerial or ground)") {
         REQUIRE(nearest_attacker_index.has_value() == true);
-        REQUIRE(nearest_attacker_index.value() == 3);
+        REQUIRE(nearest_attacker_index.value() == 1);
       }
     }
   }

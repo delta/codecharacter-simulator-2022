@@ -9,21 +9,18 @@
 Attacker Attacker::construct(AttackerType type, Position p) {
   Attributes attr = Attacker::attribute_dictionary[type];
   Logger::log_spawn(_id_counter, type, p.get_x(), p.get_y());
-  return {type,       p,
-          attr.hp,    attr.range,
-          attr.speed, attr.attack_power,
-          attr.price, Attacker::State::SPAWNED};
+  return {type,
+          p,
+          attr.hp,
+          attr.range,
+          attr.speed,
+          attr.attack_power,
+          attr.price,
+          attr.is_aerial,
+          Attacker::State::SPAWNED};
 }
 
 AttackerType Attacker::get_type() const { return this->_type; }
-
-bool Attacker::is_aerial_type() const {
-  auto type = this->get_type();
-  if (((int)type) == 5) {
-    return true;
-  }
-  return false;
-}
 
 bool Attacker::is_destination_set() const { return this->_is_dest_set; }
 

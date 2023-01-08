@@ -7,18 +7,11 @@
 
 Defender Defender::construct(DefenderType type, Position p) {
   Attributes attr = Defender::attribute_dictionary[type];
-  return {type, p, attr.hp, attr.range, attr.attack_power, attr.price};
+  return {type,          p, attr.hp, attr.range, attr.attack_power, attr.price,
+          attr.is_aerial};
 }
 
 DefenderType Defender::get_type() const { return this->_type; }
-
-bool Defender::is_aerial_type() const {
-  auto type = this->get_type();
-  if (((int)type) == 5) {
-    return true;
-  }
-  return false;
-}
 
 void Defender::update_state() {
   if (this->get_hp() == 0) {
@@ -79,17 +72,22 @@ std::optional<size_t> Defender::get_nearest_attacker_index(
         return std::distance(attackers.begin(), nearest_aerial_attacker);
       }
       // If aerial attacker exists but not in range, then we return the nearest
-      // ground attacker
-      else if (ground_attacker_exists) {
-        return std::distance(attackers.begin(), nearest_ground_attacker);
-      }
-      // if no ground attacker exists then we return the nearest aerial attacker
+      // attacker irrespective of ground or aerial
       else {
-        return std::distance(attackers.begin(), nearest_aerial_attacker);
+        if (ground_attacker_exists &&
+            (this->get_position().distance_to(
+                 nearest_ground_attacker->get_position()) <
+             this->get_position().distance_to(
+                 nearest_aerial_attacker->get_position()))) {
+          return std::distance(attackers.begin(), nearest_ground_attacker);
+        } else {
+          return std::distance(attackers.begin(), nearest_aerial_attacker);
+        }
       }
-    }
-    // if no aerial attacker exists then we return the nearest ground attacker
-    else {
+    } else {
+      // if no aerial attacker then loop is here only because ground attacker
+      // exists
+      // so just return nearest ground attacker
       return std::distance(attackers.begin(), nearest_ground_attacker);
     }
   }

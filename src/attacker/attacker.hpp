@@ -23,8 +23,9 @@ public:
 
   Attacker(AttackerType type, Position position, unsigned hp, unsigned range,
            unsigned speed, unsigned attack_power, unsigned price,
-           State state = State::SPAWNED)
-      : Actor{_id_counter++, position, hp, range, attack_power, price},
+           bool is_aerial, State state = State::SPAWNED)
+      : Actor{_id_counter++, position, hp,       range,
+              attack_power,  price,    is_aerial},
         _type(type), _state(state), _speed(speed), _is_dest_set(false),
         _destination{0, 0}, _is_target_set_by_player{0}, _target_id{0} {}
 
@@ -54,8 +55,6 @@ public:
   void clear_target();
 
   [[nodiscard]] AttackerType get_type() const;
-
-  bool is_aerial_type() const;
 
   void update_state() final;
 

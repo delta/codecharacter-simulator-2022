@@ -6,8 +6,9 @@ struct Attributes {
   const unsigned attack_power;
   const unsigned speed;
   const unsigned price;
+  const bool is_aerial;
   Attributes(unsigned hp, unsigned range, unsigned attack_power, unsigned speed,
-             unsigned price);
+             unsigned price, bool is_aerial);
 
   /**
    * A default constructor is to be added for this, solely for the reason of

@@ -22,8 +22,10 @@ public:
   enum class State { IDLE, ATTACKING, DEAD };
 
   Defender(DefenderType type, Position position, unsigned hp, unsigned range,
-           unsigned attack_power, unsigned price, State state = State::IDLE)
-      : Actor{_id_counter++, position, hp, range, attack_power, price},
+           unsigned attack_power, unsigned price, bool is_aerial,
+           State state = State::IDLE)
+      : Actor{_id_counter++, position, hp,       range,
+              attack_power,  price,    is_aerial},
         _type(type), _state(state) {}
 
   [[nodiscard]] static Defender construct(DefenderType type, Position p);
@@ -38,8 +40,6 @@ public:
   void set_state(State s);
 
   [[nodiscard]] DefenderType get_type() const;
-
-  bool is_aerial_type() const;
 
   [[nodiscard]] State get_state() const;
 

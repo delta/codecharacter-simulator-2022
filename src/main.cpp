@@ -17,10 +17,11 @@ int main() {
   for (unsigned attacker_type_id = 1; attacker_type_id <= n_attacker_types;
        ++attacker_type_id) {
     unsigned hp, range, attack_power, speed, price;
-    std::cin >> hp >> range >> attack_power >> speed >> price;
-    Attacker::attribute_dictionary.insert(
-        std::make_pair(AttackerType(attacker_type_id),
-                       Attributes(hp, range, attack_power, speed, price)));
+    bool is_aerial;
+    std::cin >> hp >> range >> attack_power >> speed >> price >> is_aerial;
+    Attacker::attribute_dictionary.insert(std::make_pair(
+        AttackerType(attacker_type_id),
+        Attributes(hp, range, attack_power, speed, price, is_aerial)));
   }
 
   unsigned n_defender_types;
@@ -28,10 +29,11 @@ int main() {
   for (unsigned defender_type_id = 1; defender_type_id <= n_defender_types;
        ++defender_type_id) {
     unsigned hp, range, attack_power, speed, price;
-    std::cin >> hp >> range >> attack_power >> speed >> price;
-    Defender::attribute_dictionary.insert(
-        std::make_pair(DefenderType(defender_type_id),
-                       Attributes(hp, range, attack_power, speed, price)));
+    bool is_aerial;
+    std::cin >> hp >> range >> attack_power >> speed >> price >> is_aerial;
+    Defender::attribute_dictionary.insert(std::make_pair(
+        DefenderType(defender_type_id),
+        Attributes(hp, range, attack_power, speed, price, is_aerial)));
   }
 
   auto map = Map::get(std::cin);

@@ -42,49 +42,55 @@ SCENARIO("Game::simulate") {
 
     Defender::attribute_dictionary.clear();
     Defender::attribute_dictionary.insert(
-        std::make_pair(DefenderType::D1, Attributes(100, // hp
-                                                    2,   // range
-                                                    50,  // attack_power
-                                                    0,   // speed
-                                                    0    // price
+        std::make_pair(DefenderType::D1, Attributes(100,  // hp
+                                                    2,    // range
+                                                    50,   // attack_power
+                                                    0,    // speed
+                                                    0,    // price
+                                                    false // is_aerial
                                                     )));
     Defender::attribute_dictionary.insert(
-        std::make_pair(DefenderType::D2, Attributes(200, // hp
-                                                    3,   // range
-                                                    100, // attack_power
-                                                    0,   // speed
-                                                    0    // price
+        std::make_pair(DefenderType::D2, Attributes(200,  // hp
+                                                    3,    // range
+                                                    100,  // attack_power
+                                                    0,    // speed
+                                                    0,    // price
+                                                    false // is_aerial
                                                     )));
     Defender::attribute_dictionary.insert(
         std::make_pair(DefenderType::D5, Attributes(200, // hp
                                                     3,   // range
                                                     100, // attack_power
                                                     0,   // speed
-                                                    0    // price
+                                                    0,   // price
+                                                    true // is_aerial
                                                     )));
 
     Attacker::attribute_dictionary.clear();
     Attacker::attribute_dictionary.insert(
-        std::make_pair(AttackerType::A1, Attributes(100, // hp
-                                                    2,   // range 2
-                                                    50,  // attack_power
-                                                    2,   // speed
-                                                    100  // price
+        std::make_pair(AttackerType::A1, Attributes(100,  // hp
+                                                    2,    // range 2
+                                                    50,   // attack_power
+                                                    2,    // speed
+                                                    100,  // price
+                                                    false // is_aerial
                                                     )));
 
     Attacker::attribute_dictionary.insert(
-        std::make_pair(AttackerType::A2, Attributes(150, // hp
-                                                    2,   // range
-                                                    75,  // attack_power
-                                                    3,   // speed
-                                                    150  // price
+        std::make_pair(AttackerType::A2, Attributes(150,  // hp
+                                                    2,    // range
+                                                    75,   // attack_power
+                                                    3,    // speed
+                                                    150,  // price
+                                                    false // is_aerial
                                                     )));
     Attacker::attribute_dictionary.insert(
         std::make_pair(AttackerType::A5, Attributes(150, // hp
                                                     2,   // range
                                                     75,  // attack_power
                                                     3,   // speed
-                                                    150  // price
+                                                    150, // price
+                                                    true // is_aerial
                                                     )));
     std::vector<Defender> defenders_initial_state = game_map.spawn_defenders();
 
