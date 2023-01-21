@@ -157,32 +157,20 @@ SCENARIO("Game::simulate") {
         // of spawning attackers
         REQUIRE(first_turn_state.get_coins() == (game.get_coins() - 650));
 
-        // REQUIRE(first_turn_state.get_attackers() ==
-        //         std::vector<Attacker>{
-        //             Attacker::construct(AttackerType::A1, {4, 0}),
-        //             Attacker::construct(AttackerType::A5, {0, 4}),
-        //             Attacker::construct(AttackerType::A2, {0, 5}),
-        //             Attacker::construct(AttackerType::A1, {0, 7}),
-        //             Attacker::construct(AttackerType::A2, {4, 9}),
-        //         });
+        REQUIRE(first_turn_attackers ==
+                std::vector<Attacker>{
+                    *GroundAttacker::construct(AttackerType::A1, {4, 0}),
+                    *AerialAttacker::construct(AttackerType::A5, {0, 4}),
+                    *GroundAttacker::construct(AttackerType::A2, {0, 5}),
+                    *GroundAttacker::construct(AttackerType::A1, {0, 7}),
+                    *GroundAttacker::construct(AttackerType::A2, {4, 9}),
+                });
       }
       THEN("All the custom target set requests are invalid, so no spawned "
            "attackers would have that field as true") {
 
-        // std::cout << "here\n";
-
-        // for (auto x : first_turn_state.get_attackers()) {
-        //   std::cout << x->is_target_set_by_player() << "\n";
-        //   if (x->is_target_set_by_player()) {
-        //     std::cout << "set with " << x->get_target_id() << "\n";
-        //   }
-        // }
-
-        // std::cout << "from here\n";
-
         REQUIRE(std::ranges::none_of(
             first_turn_state.get_attackers(), [](const Attacker *attacker) {
-              // std::cout << attacker->is_target_set_by_player() << '\n';
               return attacker->is_target_set_by_player();
             }));
       }
@@ -288,7 +276,6 @@ SCENARIO("Game::simulate") {
       }
 
       THEN("Some defenders are in ATTACKING state") {
-        // const auto &defs = second_turn_state.get_defenders();
         REQUIRE(std::ranges::all_of(
             std::array{
                 *find_actor_by_position(second_turn_defenders, {2, 5}),
@@ -302,14 +289,6 @@ SCENARIO("Game::simulate") {
 
       THEN("Attackers that were in range of Defenders lost some hp") {
         // A2,A3, A4 were in range of defenders.
-
-        // std::cout <<
-        // find_actor_by_position(second_turn_state.get_defenders(),
-        //                                     {2, 5})
-        //                  ->get_attack_power()
-        //           << "\n";
-
-        // std::cout << first_turn_state.get_attackers()[A2]->get_hp() << "\n";
 
         REQUIRE(second_turn_attackers[A0].get_hp() ==
                 first_turn_attackers[0].get_hp());
@@ -336,9 +315,6 @@ SCENARIO("Game::simulate") {
       };
 
       THEN("Defenders that were in range of Attackers lost some hp") {
-        // const auto &fst_defs = first_turn_state.get_defenders();
-        // const auto &snd_defs = second_turn_state.get_defenders();
-        // const auto &snd_atckrs = second_turn_state.get_attackers();
 
         // // was attacked by A1 and A2
         REQUIRE(
@@ -442,8 +418,6 @@ SCENARIO("Game::simulate") {
     }
 
     // FOURTH TURN
-
-    // const std::vector<Attacker *> attt = third_turn_state.get_attackers();
 
     const Attacker attacker_at_0_0 =
         *find_actor_by_position(third_turn_attackers, Position(0, 0));

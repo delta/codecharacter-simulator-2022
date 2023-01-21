@@ -2,7 +2,6 @@
 #include "logger/logger.hpp"
 
 #include <algorithm>
-#include <iostream>
 #include <set>
 #include <unordered_set>
 
@@ -46,8 +45,6 @@ Game Game::simulate(
         // Getting the defender_index and checking its validity will ensure that
         // its a defender id that is currently in the map.
         if (attacker_index.has_value() && defender_index.has_value()) {
-          // std::cout << "otha I am setting for " << entry.first << "to "
-          //           << entry.second << "\n";
           attackers[*attacker_index]->set_target(
               defenders[*defender_index]->get_id());
         }
@@ -158,15 +155,9 @@ Game Game::simulate(
         !positions.contains(position)) {
       positions.insert(position);
       if (is_aerial) {
-        Attacker *att = AerialAttacker::construct(attacker_type, position);
-        // std::cout << att->get_id() << " id \n";
-        // std::cout << att->is_target_set_by_player() << "\n";
-        attackers.push_back(att);
+        attackers.push_back(AerialAttacker::construct(attacker_type, position));
       } else {
-        Attacker *att = GroundAttacker::construct(attacker_type, position);
-        // std::cout << att->get_id() << " id \n";
-        // std::cout << att->is_target_set_by_player() << "\n";
-        attackers.push_back(att);
+        attackers.push_back(GroundAttacker::construct(attacker_type, position));
       }
     }
   });

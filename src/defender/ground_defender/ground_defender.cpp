@@ -19,13 +19,16 @@ Defender *GroundDefender::construct(DefenderType type, Position p) {
   auto nearest_attacker = std::min_element(
       attackers.begin(), attackers.end(),
       [this](const Attacker *a, const Attacker *b) {
+        // ground attackers are given preference
         if (a->is_aerial_type() && !b->is_aerial_type())
           return false;
         if (b->is_aerial_type() && !a->is_aerial_type())
           return true;
+        // if both are same type nearest is returned
         return this->get_position().distance_to(a->get_position()) <
                this->get_position().distance_to(b->get_position());
       });
+  // handle absence of ground attackers
   if (!(*nearest_attacker)->is_aerial_type()) {
     return std::distance(attackers.begin(), nearest_attacker);
   }
