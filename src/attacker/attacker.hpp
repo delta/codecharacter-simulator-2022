@@ -29,10 +29,8 @@ public:
         _type(type), _state(state), _speed(speed), _is_dest_set(false),
         _destination{0, 0}, _is_target_set_by_player{0}, _target_id{0} {}
 
-  [[nodiscard]] static Attacker construct(AttackerType type, Position p);
-
-  [[nodiscard]] std::optional<size_t>
-  get_nearest_defender_index(const std::vector<Defender> &defenders) const;
+  [[nodiscard]] virtual std::optional<size_t>
+  get_nearest_defender_index(const std::vector<Defender *> &defenders) const;
 
   void move(Position position);
 
@@ -62,8 +60,8 @@ public:
 
 private:
   void set_state(State s);
-
   static inline size_t _id_counter = 0;
+
   AttackerType _type;
   State _state;
   unsigned _speed;

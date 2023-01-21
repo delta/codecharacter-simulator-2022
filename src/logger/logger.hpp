@@ -22,7 +22,7 @@ public:
   Logger &operator=(Logger &&) = delete;
 
   static std::ostringstream &get_stream() { return get()._stream; }
-  static void log_init(std::vector<Defender> &defenders);
+  static void log_init(std::vector<Defender *> &defenders);
   static void log_turn(unsigned turn);
   static void log_move(size_t attacker_id, int x, int y);
   static void log_shoot(char opponent_actor_type, size_t attacker_id,
