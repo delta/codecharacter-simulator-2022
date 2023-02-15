@@ -23,15 +23,14 @@ public:
 
   Attacker(AttackerType type, Position position, unsigned hp, unsigned range,
            unsigned speed, unsigned attack_power, unsigned price,
-           State state = State::SPAWNED)
-      : Actor{_id_counter++, position, hp, range, attack_power, price},
+           bool is_aerial, State state = State::SPAWNED)
+      : Actor{_id_counter++, position, hp,       range,
+              attack_power,  price,    is_aerial},
         _type(type), _state(state), _speed(speed), _is_dest_set(false),
         _destination{0, 0}, _is_target_set_by_player{0}, _target_id{0} {}
 
-  [[nodiscard]] static Attacker construct(AttackerType type, Position p);
-
-  [[nodiscard]] std::optional<size_t>
-  get_nearest_defender_index(const std::vector<Defender> &defenders) const;
+  [[nodiscard]] virtual std::optional<size_t>
+  get_nearest_defender_index(const std::vector<Defender *> &defenders) const;
 
   void move(Position position);
 
@@ -53,16 +52,16 @@ public:
 
   void clear_target();
 
-  void update_state() final;
-
   [[nodiscard]] AttackerType get_type() const;
+
+  void update_state() final;
 
   [[nodiscard]] State get_state() const;
 
 private:
   void set_state(State s);
-
   static inline size_t _id_counter = 0;
+
   AttackerType _type;
   State _state;
   unsigned _speed;

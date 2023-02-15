@@ -21,14 +21,19 @@ Map Map::get(std::istream &stream) {
   return {move(grid)};
 }
 
-[[nodiscard]] std::vector<Defender> Map::spawn_defenders() const {
-  std::vector<Defender> defenders;
+[[nodiscard]] std::vector<Defender *> Map::spawn_defenders() const {
+  std::vector<Defender *> defenders;
   for (size_t x = 0; x < this->no_of_cols; x++) {
     for (size_t y = 0; y < this->no_of_rows; y++) {
       if (this->_grid[y][x] > 0) {
-        defenders.push_back(Defender::construct(
-            static_cast<DefenderType>(this->_grid[y][x]),
-            Position(static_cast<int>(x), static_cast<int>(y))));
+        DefenderType type = static_cast<DefenderType>(this->_grid[y][x]);
+        if (Defender::attribute_dictionary[type].is_aerial) {
+          defenders.push_back(AerialDefender::construct(
+              type, Position(static_cast<int>(x), static_cast<int>(y))));
+        } else {
+          defenders.push_back(GroundDefender::construct(
+              type, Position(static_cast<int>(x), static_cast<int>(y))));
+        }
       }
     }
   }

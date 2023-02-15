@@ -1,7 +1,9 @@
 #pragma once
 
-#include "attacker/attacker.hpp"
-#include "defender/defender.hpp"
+#include "attacker/aerial_attacker/aerial_attacker.hpp"
+#include "attacker/ground_attacker/ground_attacker.hpp"
+#include "defender/aerial_defender/aerial_defender.hpp"
+#include "defender/ground_defender/ground_defender.hpp"
 #include "utils/position.hpp"
 
 #include <memory>
@@ -10,16 +12,16 @@
 class Game {
 
 public:
-  Game(std::vector<Attacker> attackers, std::vector<Defender> defenders,
+  Game(std::vector<Attacker *> attackers, std::vector<Defender *> defenders,
        unsigned coins);
 
   using defender_id = size_t;
   using attacker_id = size_t;
   using index_t = size_t;
 
-  [[nodiscard]] const std::vector<Attacker> &get_attackers() const;
+  [[nodiscard]] const std::vector<Attacker *> &get_attackers() const;
 
-  [[nodiscard]] const std::vector<Defender> &get_defenders() const;
+  [[nodiscard]] const std::vector<Defender *> &get_defenders() const;
 
   [[nodiscard]] Game simulate(
       const std::unordered_map<attacker_id, defender_id> &player_set_targets,
@@ -34,7 +36,7 @@ private:
 
   std::unordered_map<attacker_id, size_t> _attacker_id_to_index;
   std::unordered_map<defender_id, size_t> _defender_id_to_index;
-  std::vector<Attacker> _attackers;
-  std::vector<Defender> _defenders;
+  std::vector<Attacker *> _attackers;
+  std::vector<Defender *> _defenders;
   unsigned _coins;
 };

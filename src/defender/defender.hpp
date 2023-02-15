@@ -9,14 +9,7 @@
 #include <unordered_map>
 #include <vector>
 
-enum class DefenderType {
-  D1 = 1,
-  D2,
-  D3,
-  D4,
-  D5
-
-};
+enum class DefenderType { D1 = 1, D2, D3, D4, D5 };
 
 class Attacker;
 
@@ -29,16 +22,16 @@ public:
   enum class State { IDLE, ATTACKING, DEAD };
 
   Defender(DefenderType type, Position position, unsigned hp, unsigned range,
-           unsigned attack_power, unsigned price, State state = State::IDLE)
-      : Actor{_id_counter++, position, hp, range, attack_power, price},
+           unsigned attack_power, unsigned price, bool is_aerial,
+           State state = State::IDLE)
+      : Actor{_id_counter++, position, hp,       range,
+              attack_power,  price,    is_aerial},
         _type(type), _state(state) {}
-
-  [[nodiscard]] static Defender construct(DefenderType type, Position p);
 
   void attack(Actor &opponent) const override;
 
-  [[nodiscard]] std::optional<size_t>
-  get_nearest_attacker_index(const std::vector<Attacker> &attackers) const;
+  [[nodiscard]] virtual std::optional<size_t>
+  get_nearest_attacker_index(const std::vector<Attacker *> &attackers) const;
 
   void update_state() final;
 

@@ -6,19 +6,19 @@
 #include <sstream>
 #include <vector>
 
-void Logger::log_init(std::vector<Defender> &defenders) {
+void Logger::log_init(std::vector<Defender *> &defenders) {
   Logger::get_stream() << "INIT"
                        << "\n"
                        << "TOWERS"
                        << ", " << defenders.size();
   size_t defender_id = 0;
-  std::ranges::for_each(defenders, [&](const auto &defender) {
+  std::ranges::for_each(defenders, [&](const Defender *defender) {
     Logger::get_stream() << ", "
                          << "(" << defender_id++ << ", "
-                         << (int)defender.get_type() << ", "
-                         << defender.get_position().get_x() << ", "
-                         << defender.get_position().get_y() << ", "
-                         << defender.get_hp() << ")";
+                         << (int)defender->get_type() << ", "
+                         << defender->get_position().get_x() << ", "
+                         << defender->get_position().get_y() << ", "
+                         << defender->get_hp() << ")";
   });
   Logger::get_stream() << "\n";
 }
