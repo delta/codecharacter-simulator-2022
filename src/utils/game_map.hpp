@@ -1,7 +1,6 @@
 #pragma once
 
-#include "defender/aerial_defender/aerial_defender.hpp"
-#include "defender/ground_defender/ground_defender.hpp"
+#include "defender/defender.hpp"
 
 #include <iostream>
 #include <vector>
@@ -12,7 +11,7 @@ public:
 
   static Map get(std::istream &stream);
 
-  [[nodiscard]] std::vector<Defender *> spawn_defenders() const;
+  [[nodiscard]] std::vector<Defender> spawn_defenders() const;
 
   static inline size_t no_of_rows = 64;
   static inline size_t no_of_cols = 64;

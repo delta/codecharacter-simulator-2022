@@ -18,8 +18,11 @@
 
 -   `cd build`
 -   `cmake -G Ninja ..` . We can provide extra build flags while running this.
-    For example to generate release build, run
+    For example 
+    - to generate release build, run
     `cmake -G Ninja -DCMAKE_BUILD_TYPE=Release ..`
+    - to generate release build without tests and statically, run
+    ` cmake -G Ninja -DCMAKE_BUILD_TYPE=Release -DBUILD_PROJECT=no_tests ..`
 -   `ninja`
 
 ### Building inside Docker

@@ -1,4 +1,5 @@
 #include "attacker/attacker.hpp"
+#include "defender/defender.hpp"
 #include "logger/logger.hpp"
 #include "utils/game_map.hpp"
 
@@ -6,6 +7,20 @@
 #include <cmath>
 #include <iostream>
 #include <optional>
+
+Attacker Attacker::construct(AttackerType type, Position p) {
+  Attributes attr = Attacker::attribute_dictionary[type];
+  Logger::log_spawn(_id_counter, type, p.get_x(), p.get_y());
+  return {type,
+          p,
+          attr.hp,
+          attr.range,
+          attr.speed,
+          attr.attack_power,
+          attr.price,
+          attr.is_aerial,
+          Attacker::State::SPAWNED};
+}
 
 AttackerType Attacker::get_type() const { return this->_type; }
 
@@ -21,7 +36,6 @@ void Attacker::set_destination(Position p) {
 Position Attacker::get_destination() const { return this->_destination; }
 
 bool Attacker::is_target_set_by_player() const {
-  // std::cout << "came pa\n";
   return this->_is_target_set_by_player;
 }
 
@@ -49,7 +63,35 @@ void Attacker::update_state() {
 }
 
 [[nodiscard]] std::optional<size_t> Attacker::get_nearest_defender_index(
-    const std::vector<Defender *> &defenders) const {
+    const std::vector<Defender> &defenders) const {
+  if (defenders.empty()) {
+    return std::nullopt;
+  }
+
+  if (this->is_aerial_type()) {
+    auto nearest_defender = std::min_element(
+        defenders.begin(), defenders.end(),
+        [this](const Defender a, const Defender b) {
+          return this->get_position().distance_to(a.get_position()) <
+                 this->get_position().distance_to(b.get_position());
+        });
+    return std::distance(defenders.begin(), nearest_defender);
+  } else {
+    auto nearest_defender = std::min_element(
+        defenders.begin(), defenders.end(),
+        [this](const Defender a, const Defender b) {
+          if (a.is_aerial_type() && !b.is_aerial_type()) {
+            return false;
+          }
+          if (b.is_aerial_type() && !a.is_aerial_type()) {
+            return true;
+          }
+          return this->get_position().distance_to(a.get_position()) <
+                 this->get_position().distance_to(b.get_position());
+        });
+    return std::distance(defenders.begin(), nearest_defender);
+  }
+
   return std::nullopt;
 }
 

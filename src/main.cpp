@@ -1,6 +1,7 @@
 #include "defender/defender.hpp"
 #include "game/game.hpp"
 #include "logger/logger.hpp"
+#include "utils/attributes.hpp"
 #include "utils/game_map.hpp"
 
 #include <algorithm>
@@ -40,8 +41,8 @@ int main() {
   auto defenders = map.spawn_defenders();
 
   auto initial_hp = std::accumulate(defenders.begin(), defenders.end(), 0,
-                                    [](unsigned acc, const Defender *defender) {
-                                      return acc + defender->get_hp();
+                                    [](unsigned acc, const Defender &defender) {
+                                      return acc + defender.get_hp();
                                     });
 
   Logger::log_init(defenders);
@@ -78,28 +79,26 @@ int main() {
 
     auto active_attackers = game.get_attackers();
     std::cout << active_attackers.size() << "\n";
-    std::ranges::for_each(active_attackers, [](const Attacker *attacker) {
-      std::cout << attacker->get_id() << " " << attacker->get_position().get_x()
-                << " " << attacker->get_position().get_y() << " "
-                << (int)attacker->get_type() << " " << attacker->get_hp()
-                << "\n";
+    std::ranges::for_each(active_attackers, [](const Attacker &attacker) {
+      std::cout << attacker.get_id() << " " << attacker.get_position().get_x()
+                << " " << attacker.get_position().get_y() << " "
+                << (int)attacker.get_type() << " " << attacker.get_hp() << "\n";
     });
 
     auto active_defenders = game.get_defenders();
     std::cout << active_defenders.size() << "\n";
-    std::ranges::for_each(active_defenders, [](const Defender *defender) {
-      std::cout << defender->get_id() << " " << defender->get_position().get_x()
-                << " " << defender->get_position().get_y() << " "
-                << (int)defender->get_type() << " " << defender->get_hp()
-                << "\n";
+    std::ranges::for_each(active_defenders, [](const Defender &defender) {
+      std::cout << defender.get_id() << " " << defender.get_position().get_x()
+                << " " << defender.get_position().get_y() << " "
+                << (int)defender.get_type() << " " << defender.get_hp() << "\n";
     });
 
     std::cout << game.get_coins() << "\n";
 
     auto current_hp =
         std::accumulate(active_defenders.begin(), active_defenders.end(), 0,
-                        [](unsigned acc, const Defender *defender) {
-                          return acc + defender->get_hp();
+                        [](unsigned acc, const Defender &defender) {
+                          return acc + defender.get_hp();
                         });
 
     Logger::log_destruction(
