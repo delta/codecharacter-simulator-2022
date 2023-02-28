@@ -12,6 +12,6 @@ cd "$bin_dir"
 
 if [ ! -f "conanbuildinfo.cmake" ]
 then
-	conan install ..
+	conan install .. --profile:build=default
 fi
 
