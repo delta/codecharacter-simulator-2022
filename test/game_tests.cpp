@@ -4,7 +4,8 @@
 
 #include <catch2/catch.hpp>
 
-template <class T> concept ActorBased = std::is_base_of<Actor, T>::value;
+template <class T>
+concept ActorBased = std::is_base_of<Actor, T>::value;
 
 SCENARIO("Game::simulate") {
 

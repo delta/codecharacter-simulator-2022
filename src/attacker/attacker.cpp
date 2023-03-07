@@ -89,9 +89,9 @@ void Attacker::update_state() {
           return this->get_position().distance_to(a.get_position()) <
                  this->get_position().distance_to(b.get_position());
         });
-    return std::distance(defenders.begin(), nearest_defender);
+    if (!nearest_defender->is_aerial_type())
+      return std::distance(defenders.begin(), nearest_defender);
   }
-
   return std::nullopt;
 }
 

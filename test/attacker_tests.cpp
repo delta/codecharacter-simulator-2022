@@ -207,56 +207,55 @@ SCENARIO("Ground Attacker::get_nearest_defender_index") {
         REQUIRE(nearest_defender.value() == 4);
       }
     }
-  }
-  WHEN("The list has only aerial defenders") {
-    Defender::attribute_dictionary.clear();
-    Defender::attribute_dictionary.insert(
-        std::make_pair(DefenderType::D1, Attributes(0, 0, 0, 0, 0, true)));
-    std::vector<Defender> defenders{
-        Defender::construct(DefenderType::D1, {0, 1}),
-        Defender::construct(DefenderType::D1, {0, 2}),
-        Defender::construct(DefenderType::D1, {0, 4}),
-        Defender::construct(DefenderType::D1, {0, 5}),
-        Defender::construct(DefenderType::D1, {0, 3}),
-        Defender::construct(DefenderType::D1, {0, 6}),
-        Defender::construct(DefenderType::D1, {0, 7})};
+    WHEN("The list has only aerial defenders") {
+      Defender::attribute_dictionary.clear();
+      Defender::attribute_dictionary.insert(
+          std::make_pair(DefenderType::D1, Attributes(0, 0, 0, 0, 0, true)));
+      std::vector<Defender> defenders{
+          Defender::construct(DefenderType::D1, {0, 1}),
+          Defender::construct(DefenderType::D1, {0, 2}),
+          Defender::construct(DefenderType::D1, {0, 4}),
+          Defender::construct(DefenderType::D1, {0, 5}),
+          Defender::construct(DefenderType::D1, {0, 3}),
+          Defender::construct(DefenderType::D1, {0, 6}),
+          Defender::construct(DefenderType::D1, {0, 7})};
 
-    Attacker::attribute_dictionary.clear();
-    Attacker::attribute_dictionary.insert(
-        std::make_pair(AttackerType::A1, Attributes(0, 0, 0, 0, 0, false)));
-    Attacker attacker = Attacker::construct(AttackerType::A1, {0, 0});
+      Attacker::attribute_dictionary.clear();
+      Attacker::attribute_dictionary.insert(
+          std::make_pair(AttackerType::A1, Attributes(0, 0, 0, 0, 0, false)));
+      Attacker attacker = Attacker::construct(AttackerType::A1, {0, 0});
 
-    auto nearest_defender = attacker.get_nearest_defender_index(defenders);
+      auto nearest_defender = attacker.get_nearest_defender_index(defenders);
 
-    THEN("nearest aerial defender is the closet defenders") {
-      REQUIRE(nearest_defender.has_value() == true);
-      REQUIRE(nearest_defender.value() == 0);
+      THEN("no defender should be returned") {
+        REQUIRE(nearest_defender.has_value() == false);
+      }
     }
-  }
 
-  WHEN("The list has only ground defenders") {
-    Defender::attribute_dictionary.clear();
-    Defender::attribute_dictionary.insert(
-        std::make_pair(DefenderType::D2, Attributes(0, 0, 0, 0, 0, false)));
-    std::vector<Defender> defenders{
-        Defender::construct(DefenderType::D2, {0, 1}),
-        Defender::construct(DefenderType::D2, {0, 2}),
-        Defender::construct(DefenderType::D2, {0, 4}),
-        Defender::construct(DefenderType::D2, {0, 5}),
-        Defender::construct(DefenderType::D2, {0, 3}),
-        Defender::construct(DefenderType::D2, {0, 6}),
-        Defender::construct(DefenderType::D2, {0, 7})};
+    WHEN("The list has only ground defenders") {
+      Defender::attribute_dictionary.clear();
+      Defender::attribute_dictionary.insert(
+          std::make_pair(DefenderType::D2, Attributes(0, 0, 0, 0, 0, false)));
+      std::vector<Defender> defenders{
+          Defender::construct(DefenderType::D2, {0, 1}),
+          Defender::construct(DefenderType::D2, {0, 2}),
+          Defender::construct(DefenderType::D2, {0, 4}),
+          Defender::construct(DefenderType::D2, {0, 5}),
+          Defender::construct(DefenderType::D2, {0, 3}),
+          Defender::construct(DefenderType::D2, {0, 6}),
+          Defender::construct(DefenderType::D2, {0, 7})};
 
-    Attacker::attribute_dictionary.clear();
-    Attacker::attribute_dictionary.insert(
-        std::make_pair(AttackerType::A1, Attributes(0, 0, 0, 0, 0, false)));
-    Attacker attacker = Attacker::construct(AttackerType::A1, {0, 0});
+      Attacker::attribute_dictionary.clear();
+      Attacker::attribute_dictionary.insert(
+          std::make_pair(AttackerType::A1, Attributes(0, 0, 0, 0, 0, false)));
+      Attacker attacker = Attacker::construct(AttackerType::A1, {0, 0});
 
-    auto nearest_defender = attacker.get_nearest_defender_index(defenders);
+      auto nearest_defender = attacker.get_nearest_defender_index(defenders);
 
-    THEN("nearest ground defender is the closet defenders") {
-      REQUIRE(nearest_defender.has_value() == true);
-      REQUIRE(nearest_defender.value() == 0);
+      THEN("nearest ground defender is the closet defenders") {
+        REQUIRE(nearest_defender.has_value() == true);
+        REQUIRE(nearest_defender.value() == 0);
+      }
     }
   }
 }

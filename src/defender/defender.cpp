@@ -39,12 +39,20 @@ std::optional<size_t> Defender::get_nearest_attacker_index(
     auto nearest_attacker = std::min_element(
         attackers.begin(), attackers.end(),
         [this](const Attacker a, const Attacker b) {
+          if (a.is_aerial_type() && !b.is_aerial_type() &&
+              this->is_in_range(a)) {
+            return true;
+          }
+          if (b.is_aerial_type() && !a.is_aerial_type() &&
+              this->is_in_range(b)) {
+            return false;
+          }
           return this->get_position().distance_to(a.get_position()) <
                  this->get_position().distance_to(b.get_position());
         });
     return std::distance(attackers.begin(), nearest_attacker);
   } else {
-    auto nearest_defender = std::min_element(
+    auto nearest_attacker = std::min_element(
         attackers.begin(), attackers.end(),
         [this](const Attacker a, const Attacker b) {
           if (a.is_aerial_type() && !b.is_aerial_type()) {
@@ -56,7 +64,8 @@ std::optional<size_t> Defender::get_nearest_attacker_index(
           return this->get_position().distance_to(a.get_position()) <
                  this->get_position().distance_to(b.get_position());
         });
-    return std::distance(attackers.begin(), nearest_defender);
+    if (!nearest_attacker->is_aerial_type())
+      return std::distance(attackers.begin(), nearest_attacker);
   }
 
   return std::nullopt;
